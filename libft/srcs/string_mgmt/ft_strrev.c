@@ -10,20 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "string_mgmt"
+#include "string_mgmt.h"
 
-void	ft_strrev(char *str, int len)
+char	*ft_strrev(char *str)
 {
-	char *first;
-	char *last;
-	char tmp;
+	char *p1, *p2;
 
-	first = str;
-	last = ft_strlen(str) > len ? len - 1 : ft_strlen(str) - 1;
-	while (first && first < last)
+	if (! str || ! *str)
+		return (str);
+	p1 = str;
+	p2 = str + ft_strlen(str) - 1;
+	while (p2 > p1)
 	{
-		tmp = *first;
-		*first++ = *last;
-		*last-- = tmp;
+		*p1 ^= *p2;
+		*p2 ^= *p1;
+		*p1 ^= *p2;
+		++p1, --p2;
 	}
+	return (str);
 }

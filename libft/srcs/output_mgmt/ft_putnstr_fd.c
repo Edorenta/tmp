@@ -18,6 +18,6 @@ void	ft_putnstr_fd(const char *str, int fd, size_t n)
 
 	while (*ptr != '\0')
 		++ptr;
-	n = (ptr - str) > n ? n : (ptr - str);
-	write(fd, str, ptr - n);
+	n = (size_t)(ptr - str) > n ? n : (size_t)(ptr - str);
+	write(fd, str, n);
 }

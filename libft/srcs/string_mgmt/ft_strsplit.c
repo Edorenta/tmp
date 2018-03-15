@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tring_mgmt.h"
+#include "string_mgmt.h"
 #ifndef STDLIB_H
 # include <stdlib.h>
 #endif
@@ -39,7 +39,7 @@ char		**ft_strsplit(const char *str, char c)
 			if (last > first)
 				tab[j++] = ft_strsub(str, first, (last - first));
 		}
-		tab[j] = (void *)0);
+		tab[j] = (void *)0;
 	}
 	return (tab);
 }

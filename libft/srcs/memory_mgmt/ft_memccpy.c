@@ -12,7 +12,7 @@
 
 #include "memory_mgmt.h"
 
-void		*ft_memccpy(void *mem2, const void *mem1, int c, size_t len)
+void	*ft_memccpy(void *mem2, const void *mem1, int c, size_t len)
 {
 	size_t			i;
 	unsigned char	*src;

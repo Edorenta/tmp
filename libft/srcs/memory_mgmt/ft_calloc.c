@@ -12,6 +12,9 @@
 
 #include "memory_mgmt.h"
 #include "output_mgmt.h"
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
 
 void	*ft_calloc(size_t count, size_t size)
 {

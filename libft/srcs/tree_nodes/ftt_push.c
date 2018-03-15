@@ -12,6 +12,7 @@
 
 #include "tree_nodes.h"
 #include "list_container.h"
+#include "memory_mgmt.h"
 
 /*
 ** Tree::push

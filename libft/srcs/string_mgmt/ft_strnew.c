@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "memory_mgmt.h"
 #ifndef STDLIB_H
 # include <stdlib.h>
 #endif
@@ -19,7 +20,7 @@ char	*ft_strnew(size_t size)
 	char	*str;
 
 	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
-		return (NULL);
+		return ((void *)0);
 	ft_bzero(str, size + 1);
 	return (str);
 }

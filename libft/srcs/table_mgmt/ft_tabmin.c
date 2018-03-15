@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_tabmin(int **tab, int x, int y)
+int		ft_tabmin(int **tab, int col, int row)
 {
 	int i;
 	int j;
@@ -20,10 +20,10 @@ int		ft_tabmin(int **tab, int x, int y)
 		return (0);
 	i = -1;
 	min = tab[0][0];
-	while (++i < y)
+	while (++i < row)
 	{
 		j = -1;
-		while (++j < x)
+		while (++j < col)
 			if (tab[i][j] < min)
 				min = tab[i][j];
 	}

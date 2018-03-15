@@ -10,9 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
+
 void	ft_memdel(void **mem)
 {
 	if (mem && *mem)
 		free(*mem);
-	*mem = (void *)0);
+	*mem = (void *)0;
 }

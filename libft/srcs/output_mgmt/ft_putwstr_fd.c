@@ -12,7 +12,7 @@
 
 #include "output_mgmt.h"
 
-void		ft_putwstr(const wchar_t *wstr, int fd)
+void		ft_putwstr_fd(const wchar_t *wstr, int fd)
 {
 	int		i;
 

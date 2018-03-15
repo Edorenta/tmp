@@ -18,6 +18,6 @@ void	ft_putwchar(wchar_t c)
 	char	buf[4];
 	int		n;
 
-	n = ft_widetoa(&buf[0], c)
+	n = ft_witoa(&buf[0], c);
 	ft_putstr(buf);
 }

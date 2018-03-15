@@ -1,3 +1,4 @@
+
 #******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
@@ -20,14 +21,14 @@ SRCS		= $(addprefix $(SRCS_PATH),$(addsuffix .c,$(FILES)))
 OBJS		= $(addprefix $(OBJS_PATH),$(addsuffix .o,$(FILES)))
 
 LFTDIR		= libft
-COMPILER	= gcc
+COMPILER	= clang
 LINKER		= ar rc
 SRCS_PATH	= srcs/
-HDRPATH		= include/
+I_PATH		= include/
 OBJS_PATH	= objs/
-IFLAGS		= -I $(HDRPATH) -I $(LFTDIR)/include
+INCLUDES	= -I $(I_PATH) -I $(LFTDIR)/include
 LFLAGS		= -L $(LFTDIR) -lft
-CFLAGS		= -Wall -Wextra $(IFLAGS)
+CFLAGS		= -Wall -Wextra $(INCLUDES)
 
 #color
 BLACK		= "\033[1;30m"
@@ -65,7 +66,7 @@ $(NAME): $(OBJS)
 	"build successful\t"$(OK)'\n'
 
 $(OBJS_PATH)%.o: $(SRCS_PATH)%.c | $(OBJS_TRACKER)
-	@printf "\r$(EOLCLR)[$(NAME_P)] compiling\t$(BOLD)$(YELLOW)$<$(WHITE)"
+	@printf "$(EOLCLR)[$(NAME_P)] compiling\t$(BOLD)$(YELLOW)$<$(WHITE)\r"
 	@$(COMPILER) $(CFLAGS) -c $< -o $@
 	@printf '\t'$(OK)
 
@@ -100,7 +101,7 @@ re: fclean all
 
 norm:
 	@echo $(RED)
-	@norminette $(SRCS) $(HDRPATH) | grep -v	Norme -B1 || true
+	@norminette $(SRCS) $(I_PATH) | grep -v	Norme -B1 || true
 	@echo $(END)
 
 .PHONY: all clean fclean re test norme

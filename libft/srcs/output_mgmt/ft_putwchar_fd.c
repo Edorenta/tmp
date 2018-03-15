@@ -13,11 +13,11 @@
 #include "output_mgmt.h"
 #include "unicode.h"
 
-void	ft_putwchar(wchar_t c, int fd)
+void	ft_putwchar_fd(wchar_t c, int fd)
 {
 	char	buf[4];
 	int		n;
 
-	n = ft_widetoa(&buf[0], c)
+	n = ft_witoa(&buf[0], c);
 	ft_putstr_fd(buf, fd);
 }

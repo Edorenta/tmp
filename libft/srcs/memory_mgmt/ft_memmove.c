@@ -12,7 +12,7 @@
 
 #include "memory_mgmt.h"
 #ifndef STDLIB_H
-# define <stdlib.h>
+# include <stdlib.h>
 #endif
 
 void	*ft_memmove(void *mem2, const void *mem1, size_t n)

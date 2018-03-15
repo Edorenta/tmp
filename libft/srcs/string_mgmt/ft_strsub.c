@@ -20,7 +20,7 @@ char	*ft_strsub(const char *str, unsigned int start, size_t n)
 	char	*tmp;
 
 	if (!str || !(tmp = (char *)malloc(sizeof(*tmp) * (n + 1))))
-		return (NULL);
+		return ((void *)0);
 	i = 0;
 	while (n - i)
 	{

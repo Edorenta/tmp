@@ -11,13 +11,16 @@
 /* ************************************************************************** */
 
 #include "memory_mgmt.h"
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
 
 void	*ft_memdup(const void *mem1, size_t n)
 {
 	void	*mem2;
 
 	if (!mem1)
-		return ((void *)0));
+		return ((void *)0);
 	mem2 = (void *)malloc(n);
 	if (!mem2)
 		return ((void *)0);

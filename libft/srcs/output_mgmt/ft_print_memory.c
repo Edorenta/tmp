@@ -16,7 +16,7 @@ static void		ft_putnbr_hex(int octet, int rem)
 {
 	if (rem > 1)
 		ft_putnbr_hex(octet >> 4, rem - 1);
-	write(1, BASE_LCASE[octet % 16], 1);
+	write(1, &BASE_LCASE[octet % 16], 1);
 }
 
 static void		sp_putchar(const unsigned char *ptr)

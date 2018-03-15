@@ -18,7 +18,7 @@ char	*ft_strmapi(const char *str, char (*f)(unsigned int, char))
 	char			*dst;
 
 	if (!(str && f && *f) || !(dst = ft_strnew(ft_strlen(str))))
-		return ((void *)0));
+		return ((void *)0);
 	i = -1;
 	while (str[++i])
 		dst[i] = (*f)(i, str[i]);

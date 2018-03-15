@@ -28,7 +28,7 @@ char			*ft_strtrim(const char *str)
 	size_t	len;
 
 	if (!str)
-		return ((void *)0));
+		return ((void *)0);
 	min = 0;
 	while (str[min] != '\0' && is_space((char)str[min]))
 		min++;

@@ -38,7 +38,7 @@ void	ft_putendl_fd(const char *s, int fd);
 void	ft_putnbr(int n);
 void	ft_putnbr_base(int n,uint8_t base);
 void	ft_putnbr_fd(int n, int fd);
-void	ft_putwchar(wchar_t wstr);
+void	ft_putwchar(wchar_t c);
 void	ft_putwstr(const wchar_t *wstr);
 void	ft_putwchar_fd(wchar_t wstr, int fd);
 void	ft_putwstr_fd(const wchar_t *wstr, int fd);

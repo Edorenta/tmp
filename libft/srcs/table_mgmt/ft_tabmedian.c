@@ -12,7 +12,7 @@
 
 #include "table_mgmt.h"
 
-static	int	get_median(int **tab, int x, int y, int z);
+static	int	get_median(int **tab, int col, int row, int z)
 {
 	int	i;
 	int j;
@@ -23,16 +23,16 @@ static	int	get_median(int **tab, int x, int y, int z);
 		return (0);
 	i = -1;
 	k = -1;
-	while (tab[++i])
+	while (++i < col)
 	{
 		j = -1;
-		while (tab[i][++j])
+		while (++j < row)
 			tmp[++k] = tab[i][j];
 	}
 	return (ft_arraymedian(&tmp[0], z));
 }
 
-int		ft_tabmedian(int **tab, int x, int y)
+int		ft_tabmedian(int **tab, int col, int row)
 {
-	return (get_median(tab, x, y, x * y));
+	return (get_median(tab, col, row, col * row));
 }

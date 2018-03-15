@@ -11,12 +11,15 @@
 /* ************************************************************************** */
 
 #include "memory_mgmt.h"
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
 
 void	*ft_memalloc(size_t size)
 {
 	void	*mem;
 
-	if ((mem = malloc(size)) == (void *)0))
+	if ((mem = malloc(size)) == (void *)0)
 		return ((void *)0);
 	ft_bzero(mem, size);
 	return (mem);

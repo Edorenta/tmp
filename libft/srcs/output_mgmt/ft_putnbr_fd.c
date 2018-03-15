@@ -12,7 +12,7 @@
 
 #include "output_mgmt.h"
 
-void	ft_putnbr(int nb, int fd)
+void	ft_putnbr_fd(int nb, int fd)
 {
 	if (nb < 0)
 		ft_putchar_fd('-', fd);

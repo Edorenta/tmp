@@ -10,18 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "string_mgmt.h"
+
 char	*ft_strrchr(const char *str, int c)
 {
-	char			*tmp;
+	int		len;
 
-	tmp = (void *)0;
-	while (*str)
-	{
-		if (*str == (char)c)
-			tmp = str;
-		str++;
-	}
-	if (*str == (char)c)
-		return ((char *)str);
-	return (tmp);
+	len = ft_strlen((char *)str);
+	while (0 != len && str[len] != (char)c)
+		len--;
+	if (str[len] == (char)c)
+		return ((char *)&str[len]);
+	return ((void *)0);
 }

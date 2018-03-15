@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_tabmean(int **tab, int x, int y)
+int		ft_tabmean(int **tab, int col, int row)
 {
 	int i;
 	int j;
@@ -20,11 +20,11 @@ int		ft_tabmean(int **tab, int x, int y)
 		return (0);
 	i = -1;
 	sum = 0;
-	while (++i < y)
+	while (++i < row)
 	{
 		j = -1;
-		while (++j < x)
+		while (++j < col)
 			sum += tab[i][j];
 	}
-	return (sum / (x * y));
+	return (sum / (col * row));
 }

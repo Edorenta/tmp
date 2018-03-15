@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "memory_mgmt.h"
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
 
 void	*ft_safe_calloc(size_t count, size_t size)
 {

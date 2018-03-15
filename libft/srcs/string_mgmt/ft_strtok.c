@@ -19,7 +19,7 @@ char	*ft_strtok(char *str, const char *sep)
 
 	c = 0;
 	if (!str)
-		return ((void *)0));
+		return ((void *)0);
 	while (ft_strchr(sep, c))
 		if ((c = *str++) == '\0')
 			return (0);
