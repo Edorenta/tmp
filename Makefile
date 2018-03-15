@@ -20,7 +20,7 @@ SRCS		= $(addprefix $(SRCS_PATH),$(addsuffix .c,$(FILES)))
 OBJS		= $(addprefix $(OBJS_PATH),$(addsuffix .o,$(FILES)))
 
 LFTDIR		= libft
-COMPILER	= clang
+COMPILER	= gcc
 LINKER		= ar rc
 SRCS_PATH	= srcs/
 HDRPATH		= include/
