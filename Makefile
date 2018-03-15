@@ -6,7 +6,7 @@
 #    By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/01 20:07:00 by angagnie          #+#    #+#              #
-#    Updated: 2016/12/22 16:17:09 by angagnie         ###   ########.fr        #
+#    Updated: 2018/03/15 10:24:58 by pde-rent         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -73,15 +73,9 @@ clean:
 fclean: clean
 	@$(MAKE) -C libft/ fclean
 	@rm -f $(NAME)
-	@rm -f test_me
-	@rm -rf test_me.dSYM/
 
 re: fclean
 	@$(MAKE) all
-
-test: $(NAME)
-	@echo "Files :" $(FILES)
-	@$(COMPILER) -g $(CFLAGS) src/main.c $(SRC) $(LFLAGS) -o test_me
 
 norm:
 	@echo $(RED)
