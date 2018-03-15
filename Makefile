@@ -3,83 +3,104 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+         #
+#    By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/11/01 20:07:00 by angagnie          #+#    #+#              #
-#    Updated: 2018/03/15 10:26:25 by pde-rent         ###   ########.fr        #
+#    Created: 2016/11/01 20:07:00 by pde-rent          #+#    #+#              #
+#    Updated: 2018/03/15 11:20:37 by pde-rent         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-NAME:=libftprintf.a
-FILES:=ft_vasprintf ft_printf ft_vprintf db_printf ft_convert \
-	ft_convert_1 ft_convert_2 ft_convert_3 ft_convert_4 ft_convert_5
+NAME		= libftprintf.a
+NAME_P		= ft_printf
+FILES		=	ft_vasprintf		ft_printf		ft_vprintf\
+				db_printf			ft_convert		ft_convert_1\
+				ft_convert_2		ft_convert_3	ft_convert_4\
+				ft_convert_5
+SRCS		= $(addprefix $(SRCS_PATH),$(addsuffix .c,$(FILES)))
+OBJS		= $(addprefix $(OBJS_PATH),$(addsuffix .o,$(FILES)))
 
-# ----- Libft ------
-LFTDIR:=libft
-# ==================
+LFTDIR		= libft
+COMPILER	= clang
+LINKER		= ar rc
+SRCS_PATH	= srcs/
+HDRPATH		= include/
+OBJS_PATH	= objs/
+IFLAGS		= -I $(HDRPATH) -I $(LFTDIR)/include
+LFLAGS		= -L $(LFTDIR) -lft
+CFLAGS		= -Wall -Wextra $(IFLAGS)
 
-# ------------------
-COMPILER:=clang
-LINKER:=ar rc
-SRCPATH:=src/
-HDRPATH:=include/
-CCHPATH:=cache/
-IFLAGS:=-I $(HDRPATH) -I $(LFTDIR)/include
-LFLAGS:=-L $(LFTDIR) -lft
-CFLAGS:=-Wall -Wextra $(IFLAGS)
-# ==================
+#color
+BLACK		= "\033[1;30m"
+YELLOW		= "\\033[33m"
+BLUE		= "\\033[34m"
+RED			= "\\033[31m"
+WHITE		= "\\033[0m"
+CYAN		= "\\033[36m"
+GREEN		= "\\033[32m"
+BOLD		= "\\033[1m"
+PINK		= "\\033[95m"
 
-# ----- Colors -----
-BLACK:="\033[1;30m"
-RED:="\033[1;31m"
-GREEN:="\033[1;32m"
-CYAN:="\033[1;35m"
-PURPLE:="\033[1;36m"
-WHITE:="\033[1;37m"
-EOC:="\033[0;0m"
-# ==================
+#command
+EOLCLR		= "\\033[0K"
+EOC			= "\033[0;0m"
 
-# ------ Auto ------
-SRC:=$(addprefix $(SRCPATH),$(addsuffix .c,$(FILES)))
-OBJ:=$(addprefix $(CCHPATH),$(addsuffix .o,$(FILES)))
-# ==================
-CCHF:=.cache_exists
+#unicode
+CHECK		= "\\xE2\\x9C\\x94"
+OK			= " $(CYAN)$(CHECK)$(WHITE)"
+OBJS_TRACKER		= .objs_exists
+LIB_OBJS_TRACKER	= libft/.objs_exists
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@echo $(CYAN) "\tCompiling $@" $(RED)
-	@$(MAKE) -C libft/
-	@$(LINKER) $(NAME) $(OBJ) $(LFTDIR)/cache/*.o $(LFTDIR)/cache/*/*.o
+$(NAME): $(OBJS)
+	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>\t$(YELLOW)$(BOLD)"\
+	"dependencies compiled\t"$(OK)'\n'
+	@printf "[$(NAME_P)] running\t$(WHITE)ar rc $@$(WHITE)"
+	@$(LINKER) $(NAME) $(OBJS) $(LFTDIR)/objs/*.o
+	@printf '\t'$(OK)'\n'
+	@printf "[$(NAME_P)] running\t$(WHITE)ranlib $@$(WHITE)"
 	@ranlib $(NAME)
-	@echo $(GREEN)"OK"$(EOC)
+	@printf '\t'$(OK)'\n'
+	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>\t$(GREEN)$(BOLD)"\
+	"build successful\t"$(OK)'\n'
 
-$(CCHPATH)%.o: $(SRCPATH)%.c | $(CCHF)
-	@echo $(PURPLE) "\tCompiling $< into $@" $(EOC)
+$(OBJS_PATH)%.o: $(SRCS_PATH)%.c | $(OBJS_TRACKER)
+	@printf "\r$(EOLCLR)[$(NAME_P)] compiling\t$(BOLD)$(YELLOW)$<$(WHITE)"
 	@$(COMPILER) $(CFLAGS) -c $< -o $@
+	@printf '\t'$(OK)
 
 %.c:
-	@echo $(RED)"Missing file : $@" $(EOC)
+	@echo $(RED)"Missing file : $@" $(EOC)$(WHITE)
 
-$(CCHF):
-	@mkdir $(CCHPATH)
-	@touch $(CCHF)
+$(OBJS_TRACKER): $(LIB_OBJS_TRACKER)
+	@mkdir -p $(OBJS_PATH)
+	@touch $(OBJS_TRACKER)
+
+$(LIB_OBJS_TRACKER):
+	@$(MAKE) -C libft/
 
 clean:
-	@$(MAKE) -C libft/ clean
-	@rm -rf $(CCHPATH)
-	@rm -f $(CCHF)
+	@$(MAKE) -C $(LFTDIR) clean
+	@printf "[$(NAME_P)] cleaning\t$(PINK)all obj files$(WHITE)"
+	@rm -rf $(OBJS_PATH)
+	@rm -f $(OBJS_TRACKER)
+	@printf '\t\t'$(OK)'\n'
 
-fclean: clean
-	@$(MAKE) -C libft/ fclean
+fclean:
+	@$(MAKE) -C $(LFTDIR) fclean
+	@printf "[$(NAME_P)] cleaning\t$(PINK)all obj files$(WHITE)"
+	@rm -rf $(OBJS_PATH)
+	@rm -f $(OBJS_TRACKER)
+	@printf '\t\t'$(OK)'\n'
+	@printf "[$(NAME_P)] erasing\t$(PINK)$(NAME)$(WHITE)"
 	@rm -f $(NAME)
+	@printf '\t\t'$(OK)'\n'
 
-re: fclean
-	@$(MAKE) all
+re: fclean all
 
 norm:
 	@echo $(RED)
-	@norminette $(SRC) $(HDRPATH) | grep -v	Norme -B1 || true
+	@norminette $(SRCS) $(HDRPATH) | grep -v	Norme -B1 || true
 	@echo $(END)
 
 .PHONY: all clean fclean re test norme

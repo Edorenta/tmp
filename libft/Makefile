@@ -3,139 +3,117 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+         #
+#    By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2015/12/07 17:38:00 by angagnie          #+#    #+#              #
-#    Updated: 2018/03/15 10:28:41 by pde-rent         ###   ########.fr        #
+#    Created: 2017/12/07 17:38:00 by pde-rent          #+#    #+#              #
+#    Updated: 2018/03/15 12:55:18 by pde-rent         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-# ==== Editable ====
-NAME:=libft.a
+NAME    	= libft.a
+SRCS_PATH	= srcs/
+OBJS_PATH	= objs/
+I_PATH		= include/
+FLAGS		= -Wall -Werror -Wextra -g -I$(I_PATH) -Wpedantic
+CC			= gcc $(FLAGS)
+SRC_SUBDIRS	= $(shell find $(SRCS_PATH) -type d)
+SRCS		= $(shell find $(SRCS_PATH) -type f -name "*.c")
+OBJS		= $(shell find $(SRCS_PATH) -type f -name "*.o")
+NAME_P		= $(shell echo $(NAME) | tr ' ' '\n' |\
+				sed "s/\.[acoh]$///g" | tr '\n' ' ' | sed "s/ $///g")
+OBJS_TRACKER= .objs_exist
+#MAKEFLAGS	+=-j
 
-CTYPEPATH:=ft_ctype/
-CTYPE:=ft_isalnum ft_isalpha ft_isascii ft_isblank ft_iscntrl ft_isdigit \
-	ft_isgraph ft_islower ft_isprint ft_ispunct ft_isspace ft_isupper \
-	ft_isxdigit ft_tolower ft_toupper
+#color
+YELLOW		= "\\033[33m"
+BLUE		= "\\033[34m"
+RED			= "\\033[31m"
+WHITE		= "\\033[0m"
+CYAN		= "\\033[36m"
+GREEN		= "\\033[32m"
+BOLD		= "\\033[1m"
+PINK		= "\\033[95m"
 
-VECTORPATH:=ft_array/
-VECTOR:=fta_alloc fta_append fta_new fta_reserve fta_resize fta_trim \
-	fta_clear fta_clearf fta_popback fta_iter fta_iteri fta_popindex \
-	fta_swap fta_overwrite fta_string fta_replace
+#command
+EOLCLR		= "\\033[0K"
 
-STREAMPATH:=ft_stream/
-STREAM:=is_refresh
+#unicode
+CHECK		= "\\xE2\\x9C\\x94"
+OK			= " $(CYAN)$(CHECK)$(WHITE)"
 
-STRPATH:=ft_string/
-STR:=ft_string
-
-STRLPATH:=ft_string_legacy/
-STRL:=ft_strcat ft_strchr ft_strrchr ft_strcmp ft_strcpy ft_strdup ft_strjoin \
-	ft_strlcat ft_strlen ft_strncat ft_strncmp ft_strncpy ft_strnew ft_strnstr \
-	ft_strstr ft_strdel ft_strtrim ft_strsub ft_strsplit ft_strclr ft_strequ \
-	ft_striter ft_striter ft_strmap ft_striteri ft_strmapi ft_strnequ ft_strrev \
-	wide_char
-
-LSTPATH:=ft_list/
-LST:=ftl_new ftl_add ftl_pop ftl_del
-
-TREEPATH:=ft_tree/
-TREE:=ftt_push ftt_debug ftt_clear
-
-#AUTOMPATH:=ft_automaton/
-#AUTOM:=
-
-#MATHPATH:=ft_math/
-#MATH:=
-
-#PRINTFPATH:=ft_printf/
-#PRINTF:=
-
-FILES=ft_atoi ft_bzero ft_itoa ft_itoa_base ft_memalloc ft_memccpy ft_memchr \
-	ft_memdel ft_memcmp ft_memcpy ft_memmove ft_memset ft_memdup ft_putchar \
-	ft_putchar_fd ft_putendl ft_putendl_fd ft_putnbr ft_putnbr_fd ft_putstr \
-	ft_putstr_fd ft_realloc ft_print_memory ft_gnl ft_malloc
-# ==================
-
-# ==== Standard ====
-CC:=clang
-CCHPATH:=cache/
-SRCPATH:=src/
-HDRPATH:=include/
-CFLAGS:=-Wall -Wextra -I $(HDRPATH)
-# ==================
-
-# ===== Colors =====
-END:="\033[0;0m"
-BLACK:="\033[1;30m"
-RED:="\033[1;31m"
-GREEN:="\033[1;32m"
-CYAN:="\033[1;35m"
-PURPLE:="\033[1;36m"
-WHITE:="\033[1;37m"
-# ==================
-
-# ====== Auto ======
-FILES+=$(addprefix $(CTYPEPATH),$(CTYPE))
-FILES+=$(addprefix $(VECTORPATH),$(VECTOR))
-FILES+=$(addprefix $(STRLPATH),$(STRL))
-FILES+=$(addprefix $(STRPATH),$(STR))
-FILES+=$(addprefix $(STREAMPATH),$(STREAM))
-FILES+=$(addprefix $(LSTPATH),$(LST))
-FILES+=$(addprefix $(TREEPATH),$(TREE))
-#FILES+=$(addprefix $(AUTOMPATH),$(AUTOM))
-#FILES+=$(addprefix $(MATHPATH),$(MATH))
-#FILES+=$(addprefix $(PRINTFPATH),$(PRINTF))
-
-SRC:=$(addprefix $(SRCPATH),$(addsuffix .c,$(FILES)))
-OBJ:=$(addprefix $(CCHPATH),$(addsuffix .o,$(FILES)))
-# ==================
-CCHF:=.cache_exists
-MAKEFLAGS+=-j
-
+# ONLY FOR LONG TERM IMPROVEMENT
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@echo $(END)
-	@echo $(CYAN) " - Compiling $@" $(RED)
-	@ar rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
-	@echo $(GREEN) " - Done" $(END)
+$(NAME): $(OBJS_TRACKER)
+	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>>\t$(YELLOW)$(BOLD)"\
+	"all binaries compiled\t"$(OK)'\n'
+	@cp $(OBJS) $(OBJS_PATH)
+	@printf "[$(NAME_P)] running\t\t$(WHITE)ar rc $@$(WHITE)"
+	@ar rc $(NAME) $(OBJS)
+	@printf '\t\t'$(OK)'\n'
+	@printf "[$(NAME_P)] running\t\t$(WHITE)ranlib $@$(WHITE)"
+	@ranlib	$(NAME)
+	@printf '\t\t'$(OK)'\n'
+	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>>\t$(GREEN)$(BOLD)"\
+	"build successful\t"$(OK)'\n'
 
-$(CCHPATH)%.o: $(SRCPATH)%.c | $(CCHF)
-	@echo ".\c"
-	@$(CC) $(CFLAGS) -c $< -o $@
-
-%.c:
-	@echo $(RED) "Missing file : $@"
-
-$(CCHF):
-	@mkdir $(CCHPATH)
-	@mkdir $(CCHPATH)$(VECTORPATH)
-	@mkdir $(CCHPATH)$(CTYPEPATH)
-	@mkdir $(CCHPATH)$(STRLPATH)
-	@mkdir $(CCHPATH)$(STRPATH)
-	@mkdir $(CCHPATH)$(STREAMPATH)
-	@mkdir $(CCHPATH)$(LSTPATH)
-	@mkdir $(CCHPATH)$(TREEPATH)
-#	@mkdir $(CCHPATH)$(AUTOMPATH)
-#	@mkdir $(CCHPATH)$(MATHPATH)
-#	@mkdir $(CCHPATH)$(PRINTFPATH)
-	@touch $(CCHF)
+$(OBJS_TRACKER): $(SRCS) #| $(OBJS)
+	@mkdir -p $(OBJS_PATH)
+	@touch $(OBJS_TRACKER)
+	@$(MAKE) -C srcs/array_container/
+	@$(MAKE) -C srcs/list_container/
+	@$(MAKE) -C srcs/string_container/
+	@$(MAKE) -C srcs/char_class/
+	@$(MAKE) -C srcs/maths_op/
+	@$(MAKE) -C srcs/memory_mgmt/
+	@$(MAKE) -C srcs/string_mgmt/
+	@$(MAKE) -C srcs/stream_mgmt/
+	@$(MAKE) -C srcs/table_mgmt/
+	@$(MAKE) -C srcs/output_mgmt/
+	@$(MAKE) -C srcs/tree_nodes/
+	@$(MAKE) -C srcs/unicode/
+	@$(MAKE) -C srcs/parsing/
 
 clean:
-	@rm -rf $(CCHPATH)
-	@rm -f $(CCHF)
+	@printf "[$(NAME_P)] cleaning\t$(PINK)all obj files$(WHITE)"
+	@$(MAKE) -C srcs/array_container/ clean
+	@$(MAKE) -C srcs/list_container/ clean
+	@$(MAKE) -C srcs/string_container/ clean
+	@$(MAKE) -C srcs/char_class/ clean
+	@$(MAKE) -C srcs/maths_op/ clean
+	@$(MAKE) -C srcs/memory_mgmt/ clean
+	@$(MAKE) -C srcs/string_mgmt/ clean
+	@$(MAKE) -C srcs/stream_mgmt/ clean
+	@$(MAKE) -C srcs/table_mgmt/ clean
+	@$(MAKE) -C srcs/output_mgmt/ clean
+	@$(MAKE) -C srcs/tree_nodes/ clean
+	@$(MAKE) -C srcs/unicode/ clean
+	@$(MAKE) -C srcs/parsing/ clean
+	@rm -rf $(OBJS_PATH)
+	@rm -f $(OBJS_TRACKER)
+	@printf '\t\t'$(OK)'\n'
 
 fclean: clean
+	@$(MAKE) -C srcs/array_container/ fclean
+	@$(MAKE) -C srcs/list_container/ fclean
+	@$(MAKE) -C srcs/string_container/ fclean
+	@$(MAKE) -C srcs/char_class/ fclean
+	@$(MAKE) -C srcs/maths_op/ fclean
+	@$(MAKE) -C srcs/memory_mgmt/ fclean
+	@$(MAKE) -C srcs/string_mgmt/ fclean
+	@$(MAKE) -C srcs/stream_mgmt/ fclean
+	@$(MAKE) -C srcs/table_mgmt/ fclean
+	@$(MAKE) -C srcs/output_mgmt/ fclean
+	@$(MAKE) -C srcs/tree_nodes/ fclean
+	@$(MAKE) -C srcs/unicode/ fclean
+	@$(MAKE) -C srcs/parsing/ fclean
+	@printf "[$(NAME_P)] erasing\t\t$(PINK)$(NAME)$(WHITE)"
 	@rm -f $(NAME)
+	@printf '\t\t\t'$(OK)'\n'
 
-re: fclean
-	@$(MAKE) all
+re: fclean all
 
-norm:
-	@echo $(RED)
-	@norminette $(SRC) $(HDRPATH) | grep -v Norme -B1 || true
-	@echo $(END)
+norm :
+	@norminette $(SRCS_PATH) $(I_PATH)
 
-.PHONY: all clean fclean re test norme
+.PHONY: all clean fclean re test norm

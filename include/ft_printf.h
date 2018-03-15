@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/01 19:38:57 by angagnie          #+#    #+#             */
-/*   Updated: 2016/11/01 19:57:46 by angagnie         ###   ########.fr       */
+/*   Created: 2016/11/01 19:38:57 by pde-rent          #+#    #+#             */
+/*   Updated: 2016/11/01 19:57:46 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "ft_printf_private.h"
+# include "dependencies.h"
 
 int		ft_printf(char const *format, ...);
 int		ft_dprintf(int fd, char const *format, ...);

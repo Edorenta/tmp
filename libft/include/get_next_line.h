@@ -3,45 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/29 10:45:17 by angagnie          #+#    #+#             */
-/*   Updated: 2016/05/17 09:50:32 by angagnie         ###   ########.fr       */
+/*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
+/*   Updated: 2018/02/08 10:54:17 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include "ft_list.h"
-
-# include "libft.h"
-
-# include <stdlib.h>
+#ifndef UNISTD_H
 # include <unistd.h>
+#endif
+#ifndef STDLIB_H
+# include <stdlib.h>
+#endif
+# include "string_mgmt.h"
+# include "memory_mgmt.h"
 
-# define BUFF_SIZE 2048
+# define OPEN_MAX 5000
+# define BUFF_SIZE 42
+# ifndef IS
+#	define IS(x) if (!x) return (0);
+# endif
 
-typedef struct	s_fdsave
-{
-	t_node	self;
-	int		fd;
-	size_t	size;
-	char	*data;
-}				t_fdsave;
-
-/*
-** gnl :    N x A       ->  N x S
-** |        (fd, &line) |-> (status, *line)
-** -
-** @param : fd : int            // File descriptor to read from.
-** @param : line : char **      // The address of the output string.
-** -
-** @precondition : fd should already be opened
-** @precondition : *line initial value should be NULL
-** -
-*/
-
-int				get_next_line(int const fd, char **line);
+int		get_next_line(const int fd, char **line);
 
 #endif
