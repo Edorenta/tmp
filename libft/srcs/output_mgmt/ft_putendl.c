@@ -12,7 +12,7 @@
 
 #include "output_mgmt.h"
 
-void	ft_putendl(char const *s)
+void	ft_putendl(const char *s)
 {
 	ft_putstr(s);
 	ft_putchar('\n');

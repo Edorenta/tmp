@@ -13,7 +13,7 @@
 #include "memory_mgmt.h"
 #include "output_mgmt.h"
 
-void	ft_exit(char const *const fnc, char const *const str)
+void	ft_exit(const char *const fnc, const char *const str)
 {
 	ft_putstr_fd("ERROR\tCritical failure in function ", 2);
 	ft_putstr_fd(fnc, 2);

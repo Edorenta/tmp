@@ -19,9 +19,9 @@ static void		ft_putnbr_hex(int octet, int rem)
 	write(1, BASE_LCASE[octet % 16], 1);
 }
 
-static void		sp_putchar(unsigned char const *ptr)
+static void		sp_putchar(const unsigned char *ptr)
 {
-	char const c = *ptr;
+	const char c = *ptr;
 
 	if (' ' <= c && c <= '~')
 		write(1, ptr, 1);

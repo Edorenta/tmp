@@ -17,9 +17,9 @@ char	*ft_strchr(const char *str, int c)
 	return (*str == c ? (char *)str : (void *)0);
 }
 
-int		contains(char const *str, char c)
+int		contains(const char *str, char c)
 {
-	char const	*p = str;
+	const char	*p = str;
 
 	while (*p != '\0' && *p != c)
 		p++;

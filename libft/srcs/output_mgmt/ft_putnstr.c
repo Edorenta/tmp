@@ -12,9 +12,9 @@
 
 #include "output_mgmt.h"
 
-void	ft_putnstr(char const *str, size_t n)
+void	ft_putnstr(const char *str, size_t n)
 {
-	char const *ptr = str;
+	const char *ptr = str;
 
 	while (*ptr != '\0')
 		++ptr;

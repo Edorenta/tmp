@@ -25,7 +25,7 @@ int		sis_refresh(t_is *self)
 	if ((this->ptr->size == self->buff_len)
 		&& (self->buff_i >= this->ptr->size))
 		return (1);
-	self->buff = (char const *)this->ptr->data;
+	self->buff = (const char *)this->ptr->data;
 	self->buff_len = this->ptr->size;
 	return (0);
 }
@@ -35,7 +35,7 @@ int		fis_refresh(t_is *self)
 	t_fis *const	this = (t_fis *)self;
 
 	if (!(self->buff || (self->buff_i = 0)
-		|| (self->buff = (char const *)malloc(FIS_BUFF_SIZE))))
+		|| (self->buff = (const char *)malloc(FIS_BUFF_SIZE))))
 		return (1);
 	self->buff_len = read(this->fd, FIS_BUFFER(self), FIS_BUFF_SIZE);
 	return (0);

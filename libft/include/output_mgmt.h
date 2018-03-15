@@ -28,19 +28,19 @@
 # define STR_NULL       "(null)\n\0"
 
 void	ft_putchar(char c);
-void	ft_putstr(char *str);
-void	ft_putnstr(char *str, size_t n);
-void	ft_putstr_fd(char *str, int fd);
-void	ft_putnstr_fd(char *str, int fd, size_t n);
+void	ft_putstr(const char *str);
+void	ft_putnstr(const char *str, size_t n);
+void	ft_putstr_fd(const char *str, int fd);
+void	ft_putnstr_fd(const char *str, int fd, size_t n);
 void	ft_putchar_fd(char c, int fd);
-void	ft_putendl(char const *s);
-void	ft_putendl_fd(char const *s, int fd);
+void	ft_putendl(const char *s);
+void	ft_putendl_fd(const char *s, int fd);
 void	ft_putnbr(int n);
 void	ft_putnbr_base(int n,uint8_t base);
 void	ft_putnbr_fd(int n, int fd);
-void	ft_putwchar(const wchar_t wstr);
+void	ft_putwchar(wchar_t wstr);
 void	ft_putwstr(const wchar_t *wstr);
-void	ft_putwchar_fd(const wchar_t wstr, int fd);
+void	ft_putwchar_fd(wchar_t wstr, int fd);
 void	ft_putwstr_fd(const wchar_t *wstr, int fd);
 void	ft_putwnstr(const wchar_t *wstr, size_t n);
 void	ft_putwnstr_fd(const wchar_t *wstr, int fd, size_t n);

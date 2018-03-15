@@ -21,7 +21,7 @@ static int		is_space(char c)
 	return ((c == ' ' || c == '\n' || c == '\t') ? 1 : 0);
 }
 
-char			*ft_strtrim(char const *str)
+char			*ft_strtrim(const char *str)
 {
 	size_t	min;
 	size_t	max;

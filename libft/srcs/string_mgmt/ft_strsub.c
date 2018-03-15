@@ -14,7 +14,7 @@
 # include <stdlib.h>
 #endif
 
-char	*ft_strsub(char const *str, unsigned int start, size_t n)
+char	*ft_strsub(const char *str, unsigned int start, size_t n)
 {
 	int		i;
 	char	*tmp;

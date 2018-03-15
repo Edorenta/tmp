@@ -15,7 +15,7 @@
 # include <stdlib.h>
 #endif
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	int		len;
 	char	*str;

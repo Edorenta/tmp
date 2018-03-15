@@ -30,7 +30,7 @@ void	*ft_memccpy(void *mem2, const void *mem1, int c, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 void	*ft_safe_calloc(size_t count, size_t size);
 void	*ft_realloc(void *mem, size_t old_size, size_t new_size, size_t factor);
-void	ft_exit(char const *const fnc, char const *const str);
+void	ft_exit(const char *const fnc, const char *const str);
 int		ft_memcmp(const void *mem2, const void *mem1, size_t n);
 
 #endif

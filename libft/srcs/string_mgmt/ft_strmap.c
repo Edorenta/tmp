@@ -12,7 +12,7 @@
 
 #include "string_mgmt.h"
 
-char	*ft_strmap(char const *str, char (*f)(char))
+char	*ft_strmap(const char *str, char (*f)(char))
 {
 	int		i;
 	char	*dst;

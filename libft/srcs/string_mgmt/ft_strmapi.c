@@ -12,7 +12,7 @@
 
 #include "string_mgmt.h"
 
-char	*ft_strmapi(char const *str, char (*f)(unsigned int, char))
+char	*ft_strmapi(const char *str, char (*f)(unsigned int, char))
 {
 	unsigned int	i;
 	char			*dst;

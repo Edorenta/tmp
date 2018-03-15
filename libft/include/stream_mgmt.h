@@ -51,7 +51,7 @@ typedef struct s_sis	t_sis;
 
 struct					s_is
 {
-	char const	*buff;
+	const char	*buff;
 	int			(*refresh)(t_is *self);
 	size_t		buff_i;
 	size_t		buff_len;
@@ -96,7 +96,7 @@ struct					s_sis
 /*
 ** trying to fit this in 80 chars :(
 ** -
-** # define NEW__SIS(S) (t_sis){NEW__IS(ARRAY_GETT(char const, S, 0), \
+** # define NEW__SIS(S) (t_sis){NEW__IS(ARRAY_GETT(const char, S, 0), \
 ** (S)->size, &sis_refresh), S}
 */
 
