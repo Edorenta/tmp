@@ -6,7 +6,7 @@
 #    By: angagnie <angagnie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/07 17:38:00 by angagnie          #+#    #+#              #
-#    Updated: 2017/05/13 18:53:27 by angagnie         ###   ########.fr        #
+#    Updated: 2018/03/15 10:28:41 by pde-rent         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -132,9 +132,6 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
-
-test:
-	@echo "Files :" $(FILES)
 
 norm:
 	@echo $(RED)
