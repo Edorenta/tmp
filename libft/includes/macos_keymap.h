@@ -6,12 +6,12 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/02/08 10:54:17 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:22:44 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef KEYMAP_H
-# define KEYMAP_H
+#ifndef MACOS_KEYMAP_H
+# define MACOS_KEYMAP_H
 
 # define SCROLL_UP		4
 # define SCROLL_DOWN	5

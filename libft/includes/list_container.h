@@ -6,16 +6,16 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/12 15:14:40 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 18:06:29 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:22:09 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIST_CONTAINER_H
 # define LIST_CONTAINER_H
 
-#ifndef STDDEF_H
-# include <stddef.h>
-#endif
+# ifndef STDDEF_H
+#  include <stddef.h>
+# endif
 
 typedef struct		s_node
 {

@@ -6,35 +6,40 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/28 11:37:29 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 17:58:25 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:08:57 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "maths_op.h"
 #include "parsing.h"
-#ifndef STDINT_H
-#	include <stdlib.h>
+#ifndef STDLIB_H
+# include <stdlib.h>
 #endif
 
-static void		get_base(int n, uint8_t b, char *res, int *p)
+char	*ft_itoa_base(int n, uint8_t base)
 {
-	if (n <= (int)-b || (int)b <= n)
-		get_base(n / (int)b, b, res, p);
-	res[(*p)++] = BASE_LCASE[ft_iabs(n % (int)b)];
-}
+	long	tmp1;
+	long	tmp2;
+	int		dec;
+	int		i;
+	char	*str;
 
-char			*ft_itoa_base(int value, uint8_t base)
-{
-	char	*res;
-	int		p;
-
-	if (base < 2 || 36 < base
-		|| !(res = (char *)malloc(sizeof(char) * (sizeof(int) * 8 + 1))))
+	tmp1 = ft_labs((long)n);
+	dec = ft_ldigits(tmp1, base);
+	i = ((n < 0 && base == 10) ? 1 : 0) + dec;
+	if (!(str = (char *)malloc(sizeof(char) * i + 2)))
 		return ((void *)0);
-	p = 0;
-	if (value < 0)
-		res[p++] = '-';
-	get_base(value, base, res, &p);
-	res[p] = '\0';
-	return (res);
+	i = -1;
+	if ((n < 0 && base == 10))
+		str[++i] = '-';
+	while (dec)
+	{
+		tmp2 = tmp1 / ft_lpow(base, dec);
+		str[++i] = BASE_LCASE[tmp2];
+		tmp1 -= (tmp2 * ft_lpow(base, dec));
+		dec--;
+	}
+	str[++i] = BASE_LCASE[tmp1];
+	str[++i] = '\0';
+	return (str);
 }

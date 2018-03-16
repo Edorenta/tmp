@@ -6,16 +6,16 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/24 13:50:45 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 18:03:54 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:27:27 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRING_MGMT_H
 # define STRING_MGMT_H
 
-#ifndef STDDEF_H
-# include <stddef.h>
-#endif
+# ifndef STDDEF_H
+#  include <stddef.h>
+# endif
 
 void	ft_strclr(char *s);
 void	ft_strdel(char **as);

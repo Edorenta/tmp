@@ -6,26 +6,26 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 19:37:02 by pde-rent          #+#    #+#             */
-/*   Updated: 2017/05/22 13:56:55 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:26:18 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STREAM_MGMT_H
 # define STREAM_MGMT_H
 
-#ifndef FCNTL_H
-# include <fcntl.h>
-#endif
-#ifndef UIO_H
-# include <sys/uio.h>
-#endif
-#ifndef UNISTD_H
-# include <unistd.h>
-#endif
-#ifndef STDLIB_H
-# include <stdlib.h>
-#endif
-#include "string_macros.h"
+# ifndef FCNTL_H
+#  include <fcntl.h>
+# endif
+# ifndef UIO_H
+#  include <sys/uio.h>
+# endif
+# ifndef UNISTD_H
+#  include <unistd.h>
+# endif
+# ifndef STDLIB_H
+#  include <stdlib.h>
+# endif
+# include "string_macros.h"
 
 typedef struct s_is		t_is;
 typedef struct s_fis	t_fis;

@@ -6,7 +6,7 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/09 21:48:26 by pde-rent          #+#    #+#             */
-/*   Updated: 2017/05/13 19:04:11 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:28:50 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define TREE_NODES_H
 
 # ifndef STDDEF_H
-#	include <stddef.h>
+#  include <stddef.h>
 # endif
 # ifndef STDINT_H
-#	include <stdint.h>
+#  include <stdint.h>
 # endif
 
 typedef struct s_tree	t_tree;

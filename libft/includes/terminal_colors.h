@@ -6,12 +6,12 @@
 /*   By: sid <sid@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/07 11:15:09 by sid               #+#    #+#             */
-/*   Updated: 2017/01/07 12:51:14 by sid              ###   ########.fr       */
+/*   Updated: 2018/03/16 10:28:09 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_COLOR_H
-# define FT_COLOR_H
+#ifndef TERMINAL_COLORS_H
+# define TERMINAL_COLORS_H
 
 # define RED	"\033[0;31m"
 # define GREEN	"\033[0;32m"

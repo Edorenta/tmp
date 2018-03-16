@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   string_container.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/02/08 10:54:17 by pde-rent         ###   ########.fr       */
+/*   Created: 2017/01/28 20:47:11 by pde-rent          #+#    #+#             */
+/*   Updated: 2018/03/16 10:26:46 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef STRING_CONTAINER_H
+# define STRING_CONTAINER_H
 
-#ifndef UNISTD_H
-# include <unistd.h>
-#endif
-#ifndef STDLIB_H
-# include <stdlib.h>
-#endif
+# include "array_container.h"
+# include "array_macros.h"
 # include "string_mgmt.h"
-# include "memory_mgmt.h"
 
-# define OPEN_MAX 5000
-# define BUFF_SIZE 42
-# ifndef IS
-#	define IS(x) if (!x) return (0);
-# endif
+/*
+** Vector<char> wraper using the Array Container
+*/
 
-int		get_next_line(const int fd, char **line);
+typedef t_array			t_string;
+typedef struct s_substr	t_substr;
+struct					s_substr
+{
+	char		*str;
+	size_t		len;
+};
+
+char					*ft_string(t_string *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/29 05:43:19 by pde-rent          #+#    #+#             */
-/*   Updated: 2017/04/26 17:36:03 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:28:27 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "stream_mgmt.h"
 # ifndef STDINT_H
-#	include <stdint.h>
+#  include <stdint.h>
 # endif
 
 typedef struct s_tokenizer	t_tokenizer;

@@ -24,9 +24,9 @@ LFTDIR		= libft
 COMPILER	= clang
 LINKER		= ar rc
 SRCS_PATH	= srcs/
-I_PATH		= include/
+I_PATH		= includes/
 OBJS_PATH	= objs/
-INCLUDES	= -I $(I_PATH) -I $(LFTDIR)/include
+INCLUDES	= -I $(I_PATH) -I $(LFTDIR)/includes
 LFLAGS		= -L $(LFTDIR) -lft
 CFLAGS		= -Wall -Wextra $(INCLUDES)
 

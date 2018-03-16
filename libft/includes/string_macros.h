@@ -6,16 +6,16 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/24 13:50:45 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 18:09:17 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:27:08 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRING_MACROS_H
 # define STRING_MACROS_H
 
-#include "string_container.h"
-#include "array_container.h"
-#include "array_macros.h"
+# include "string_container.h"
+# include "array_container.h"
+# include "array_macros.h"
 
 # define NEW_SUB(S)					(t_substr){S, S == NULL ? 0 : ft_strlen(S)}
 # define NEW_STRING					NEW_ARRAY(char)

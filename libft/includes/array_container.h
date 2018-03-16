@@ -6,7 +6,7 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/24 13:50:45 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 18:09:17 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:20:10 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 ** |	t_array	variable = NEW_ARRAY(t_some_type);
 */
 
-#ifndef STDDEF_H
-# include <stddef.h>
-#endif
+# ifndef STDDEF_H
+#  include <stddef.h>
+# endif
 
 # define ARRAY_INITIAL_SIZE		16
 # define ARRAY_FACTOR			2

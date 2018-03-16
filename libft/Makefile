@@ -6,14 +6,14 @@
 #    By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/07 17:38:00 by pde-rent          #+#    #+#              #
-#    Updated: 2018/03/15 12:55:18 by pde-rent         ###   ########.fr        #
+#    Updated: 2018/03/16 11:27:24 by pde-rent         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME    	= libft.a
 SRCS_PATH	= srcs/
 OBJS_PATH	= objs/
-I_PATH		= -I include
+I_PATH		= -I includes
 FLAGS		= -Wall -Wextra -g $(I_PATH) #-Wpedantic
 CC			= clang $(FLAGS)
 SRCS_SUBDIRS= $(shell find $(SRCS_PATH) -type d)

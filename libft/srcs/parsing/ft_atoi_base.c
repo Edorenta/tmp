@@ -6,13 +6,13 @@
 /*   By: pde-rent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/09 20:29:19 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 17:59:55 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:09:13 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "char_class.h"
 #ifndef STDINT_H
-#	include <stdint.h>
+# include <stdint.h>
 #endif
 
 static int	in_base(char c, uint8_t base)

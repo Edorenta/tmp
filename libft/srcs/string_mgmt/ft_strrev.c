@@ -6,7 +6,7 @@
 /*   By: pde-rent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 14:32:10 by pde-rent          #+#    #+#             */
-/*   Updated: 2017/11/27 15:15:34 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:11:32 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 char	*ft_strrev(char *str)
 {
-	char *p1, *p2;
+	char *p1;
+	char *p2;
 
-	if (! str || ! *str)
+	if (!str || !*str)
 		return (str);
 	p1 = str;
 	p2 = str + ft_strlen(str) - 1;
@@ -25,7 +26,8 @@ char	*ft_strrev(char *str)
 		*p1 ^= *p2;
 		*p2 ^= *p1;
 		*p1 ^= *p2;
-		++p1, --p2;
+		++p1;
+		--p2;
 	}
 	return (str);
 }

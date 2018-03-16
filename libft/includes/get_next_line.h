@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fd_management.h                                    :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 18:05:16 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:21:23 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-# define PARSING_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# define BASE_UCASE     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\0"
-# define BASE_LCASE     "0123456789abcdefghijklmnopqrstuvwxyz\0"
-# define STR_NULL       "(null)\n\0"
-# ifndef STDINT_H
-#	include <stdint.h>
-#endif
+# ifndef UNISTD_H
+#  include <unistd.h>
+# endif
+# ifndef STDLIB_H
+#  include <stdlib.h>
+# endif
+# include "string_mgmt.h"
+# include "memory_mgmt.h"
 
-char	*ft_itoa(int n);
-int		ft_atoi(const char *str);
-double	ft_atof(const char *str);
-char	*ft_itoa_base(int n, uint8_t base);
-int		ft_atoi_base(const char *str, uint8_t base);
+# define OPEN_MAX 5000
+# define BUFF_SIZE 42
+# ifndef IS
+#  define IS(x) if (!x) return (0);
+# endif
+
+int		get_next_line(const int fd, char **line);
 
 #endif

@@ -6,22 +6,22 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/02/08 10:54:17 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:24:51 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FD_MANAGEMENT_H
-# define FD_MANAGEMENT_H
+#ifndef OUTPUT_MGMT_H
+# define OUTPUT_MGMT_H
 
-#ifndef UNISTD_H
-# include <unistd.h>
-#endif
-#ifndef STDINT_H
-# include <stdint.h>
-#endif
-#ifndef STDDEF_H
-# include <stddef.h>
-#endif
+# ifndef UNISTD_H
+#  include <unistd.h>
+# endif
+# ifndef STDINT_H
+#  include <stdint.h>
+# endif
+# ifndef STDDEF_H
+#  include <stddef.h>
+# endif
 
 # define BASE_UCASE     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\0"
 # define BASE_LCASE     "0123456789abcdefghijklmnopqrstuvwxyz\0"
@@ -36,7 +36,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putendl(const char *s);
 void	ft_putendl_fd(const char *s, int fd);
 void	ft_putnbr(int n);
-void	ft_putnbr_base(int n,uint8_t base);
+void	ft_putnbr_base(int n, uint8_t base);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putwchar(wchar_t c);
 void	ft_putwstr(const wchar_t *wstr);

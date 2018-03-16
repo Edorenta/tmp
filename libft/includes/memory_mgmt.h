@@ -6,16 +6,16 @@
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/02/08 10:54:17 by pde-rent         ###   ########.fr       */
+/*   Updated: 2018/03/16 10:23:47 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MEMORY_MANAGEMENT_H
-# define MEMORY_MANAGEMENT_H
+#ifndef MEMORY_MGMT_H
+# define MEMORY_MGMT_H
 
-#ifndef STDDEF_H
-# include <stddef.h>
-#endif
+# ifndef STDDEF_H
+#  include <stddef.h>
+# endif
 
 void	ft_memdel(void **mem);
 void	ft_swap(int *a, int *b);

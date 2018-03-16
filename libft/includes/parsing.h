@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unicode.h                                          :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/21 06:11:16 by pde-rent          #+#    #+#             */
-/*   Updated: 2018/03/14 17:56:50 by pde-rent         ###   ########.fr       */
+/*   Created: 2018/01/11 15:15:12 by pde-rent          #+#    #+#             */
+/*   Updated: 2018/03/16 10:25:26 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_WCHAR_H
-# define FT_WCHAR_H
+#ifndef PARSING_H
+# define PARSING_H
 
-# ifndef WCHAR_H
-#	include <wchar.h>
-# endif
-# ifndef STDDEF_H
-#	include <stddef.h>
+# define BASE_UCASE     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\0"
+# define BASE_LCASE     "0123456789abcdefghijklmnopqrstuvwxyz\0"
+# define STR_NULL       "(null)\n\0"
+# ifndef STDINT_H
+#  include <stdint.h>
 # endif
 
-size_t		ft_wcslen(const wchar_t *wstr);
-size_t		ft_wstrconv(char *buff, const wchar_t *wstr);
-size_t		ft_wstrnconv(char *buff, const wchar_t *wstr, size_t n);
-size_t		ft_witoa(char *buff, wint_t w);
+char	*ft_itoa(int n);
+int		ft_atoi(const char *str);
+double	ft_atof(const char *str);
+char	*ft_itoa_base(int n, uint8_t base);
+int		ft_atoi_base(const char *str, uint8_t base);
 
 #endif

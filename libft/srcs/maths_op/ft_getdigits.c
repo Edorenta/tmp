@@ -14,62 +14,22 @@
 # include <stdint.h>
 #endif
 
-int			ft_ipow(int a, uint8_t power)
+int		ft_idigits(int x, uint8_t b)
 {
-	int ret;
-
-	ret = 1;
-	while (power > 0)
-	{
-		if (power & 1)
-			ret *= a;
-		a *= a;
-		power >>= 1;
-	}
-	return (ret);
+	return (x < b ? 0 : (1 + (ft_idigits((x / (int)b), b))));
 }
 
-long		ft_lpow(long a, uint8_t power)
+int		ft_ldigits(long x, uint8_t b)
 {
-	long ret;
-
-	ret = 1;
-	while (power > 0)
-	{
-		if (power & 1)
-			ret *= a;
-		a *= a;
-		power >>= 1;
-	}
-	return (ret);
+	return (x < b ? 0 : (1 + (ft_ldigits((x / (long)b), b))));
 }
 
-long long	ft_llpow(long long a, uint8_t power)
+int		ft_lldigits(long long x, uint8_t b)
 {
-	long long ret;
-
-	ret = 1;
-	while (power > 0)
-	{
-		if (power & 1)
-			ret *= a;
-		a *= a;
-		power >>= 1;
-	}
-	return (ret);
+	return (x < b ? 0 : (1 + (ft_lldigits((x / (long long)b), b))));
 }
 
-double		ft_dpow(double a, uint8_t power)
+int		ft_ddigits(double x, uint8_t b)
 {
-	double ret;
-
-	ret = 1;
-	while (power > 0)
-	{
-		if (power & 1)
-			ret *= a;
-		a *= a;
-		power >>= 1;
-	}
-	return (ret);
+	return (x < b ? 0 : (1 + (ft_ddigits((x / (double)b), b))));
 }
