@@ -44,14 +44,16 @@ int				move_ant_forward(t_env *env, t_ant *ant)
 {
 	ant ? 0 : put_error(env, "Error: tried to move non-existing ant");
 	ant->path ? 0 : put_error(env, "Error: ant has no path to follow");
-	path_len(ant->path) > 0 ? 0 : put_error(env, "Error: ant path length <= 0");
-	ant->path->room ? 0 : put_error(env, "Error: could not locate ant");
-	if (ant->path->next && ant->path->next->room
-		&& ant->path->next->room->ant == NULL)
+	ant->path->size > 0 ? 0 : put_error(env, "Error: ant path size <= 0");
+	ant->path->rooms[ant->path->current] >= 0 ?
+	0 : put_error(env, "Error: could not locate ant");
+	if ((ant->path->current + 1) <= ant->path->size
+		env->room_free[ant->path->rooms[ant->path->current + 1]])
 	{
-		ant->path->room->ant = NULL;
-		ant->path = (ant->path->room == env->end) ? ant->path : ant->path->next;
-		ant->path->room->ant = (ant->path->room == env->end) ? NULL : ant;
+		env->room_free[ant->path->rooms[ant->path->current]] = 1;
+		env->room_free[ant->path->rooms[ant->path->current + 1]] = 0;
+		ant->path->current++;
+		// ant->path->room->ant = (ant->path->room == env->end) ? NULL : ant;
 		(IS_SET_M && !IS_SET_S) ? 0 : put_ant(env, ant);
 		return (1);
 	}
