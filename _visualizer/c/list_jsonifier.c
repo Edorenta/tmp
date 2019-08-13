@@ -19,7 +19,7 @@ int main(int ac, char** av)
 	int		nb = 0;
 	if (ac != 4)
 	{
-		write(2, "use: ./list_jsonifier [\"list name\"][\"element list\"][stringify (0/1)]\nplease make sure that your input is either space or newline delimited\n\0", 138);
+		write(2, "Usage: ./list_jsonifier [\"list name\"][\"element list\"][stringify (0/1)]\nplease make sure that your input is either space or newline delimited\n\0", 138);
 		return (-1);
 	}
 	write(1, "{\"", 2);
@@ -30,8 +30,8 @@ int main(int ac, char** av)
 	{
 		nb ? write(1, ",", 1) : 0;
 		stringify ? write(1, "\"", 1) : 0;
-		while (*av[2] == 32 || *av[2] == 10) ++av[2];
-		while (*av[2] && *av[2] != 32 && *av[2] != 10)
+		while (*av[2] == 10) ++av[2];
+		while (*av[2] && *av[2] != 10)
 		{
 			write(1, av[2], 1);
 			++av[2];	
@@ -40,7 +40,7 @@ int main(int ac, char** av)
 		*av[2] ? ++av[2] : 0;
 		nb++;
 	}
-	write(1, "]}\0", 3);
+	write(1, "]}", 3);
 }
 
 /* 2D table alternative

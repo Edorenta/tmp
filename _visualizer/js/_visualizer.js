@@ -1,15 +1,29 @@
-/*  This code intends to make it easy to visualise and optimize push_swap (42 project)
-    it has been built on top of p5js for canvas rendering and this file is the only core
-    of the visualizer.
-    Built by pde-rent @42 (paul de renty) this code is unlicenced, use at your own risk
-*/
-
 "use strict";
+
+//keyboard mapping
+var
+_up = false,
+_down = false,
+_left = false,
+_right = false,
+_1 = false,
+_2 = false,
+_3 = false,
+_4 = false,
+_5 = false,
+_6 = false,
+_7 = false,
+_8 = false,
+_9 = false,
+_r = false,
+_plus = false,
+_minus = false;
 
 //viewport size tracker
 var win = {
     w : Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
     h : Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    scl : 50
 };
 //interface colors tracker
 var clrs = {
@@ -22,472 +36,511 @@ var clrs = {
     txt_back : "rgb(45,45,45)"
 };
 
+var env = {
+        x : 0,
+        y : 0,
+        z : 0,
+        //camX : win.w/2,
+        //camY : win.h/2,
+        //camZ : (win.h/2.0) / Math.tan(Math.PI*30.0 / 180.0),
+        camX : 0,
+        camY : 0,
+        camZ : -2000,
+        centerX : 0,
+        centerY : 0,
+        centerZ : 0,
+        upX : 0,
+        upY : 1,
+        upZ : 0,
+        count : 0,
+        clr : 0,
+        nb_ants : 0,
+        nb_rooms : 0,
+        nb_links : 0
+};
+
+var df = [];
+
+class Room{
+    constructor(name, x, y, z){
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.is_start = false;
+        this.is_end = false;
+        this.link = [];
+        this.is_fw = false;
+        console.log("New room:", this.name);
+    }
+    set_start(){
+        this.is_start = true;
+    }
+    set_end(){
+        this.is_end = true;
+    }
+    add_link(room){
+        this.link.push(room);
+    }
+    set_fw(){
+        this.is_fw = true;
+    }
+    get_name(){
+        return this.name;
+    }
+};
+
 //other global variables
-var ptr = [];
 var txt_obj;
 var title;
-var details_pane;
-var clr_button;
 var start_button;
-var clr_pane;
-var clr_option;
-var clr_caption;
-var details_box;
-var speed_slider;
-var speed_box;
 var container;
-var commands_list;
-var unsorted_list;
-var op_details;
-var op_count;
-var op_list;
-var int_list;
-
-var max;
-var min;
-var mult;
-var data;
-var stack = [];
-var bars = [];
-var it = 0;
+var lines_json;
+var lines = [];
+var data = [];
 var canvas;
-var nb_int;
-var nb_op;
+var nb_lines;
+var data;
+var turn;
+var zoom = 1.00;
+var zMin = 0.02;
+var zMax = 14;
+var accuracy = 0.0005;
 
-var bar_w;
-var x_g_pad = win.w / 9.2;
-var x_pad = x_g_pad / 4;
-var looping = false;
-
-
-//min max of array as .self function
-Array.prototype.max = function() {
+//min max of array as .this function
+Array.prototype.max = function(){
     return Math.max.apply(null, this);
 };
 
-Array.prototype.min = function() {
+Array.prototype.min = function(){
     return Math.min.apply(null, this);
 };
 
-//let's load and init iro.js as our UI color picker
-var color_picker = new iro.ColorPicker("#picker", {
-  width: win.h / 4.8,
-  height: win.h / 4.8,
-  color: {r: 255, g: 0, b: 0},
-  markerRadius: 10,
-  padding: 0,
-  sliderMargin: 10,
-  sliderHeight: 20,
-  borderWidth: 2,
-  borderColor: "#b4b4b4",
-  anticlockwise: true,
-});
-
-//see for more info about this color picker:
-//https://rakujira.jp/projects/iro/docs/guide.html#color-change
-
-//Stack class
-class Stack {
-    constructor(op, a, b) {
-        this.a = a;
-        this.b = b;
-        this.op = op;
-    }
-}
-
-//Bars class
-class Bars {
-    constructor(pass) {
-        this.a = [];
-        this.b = [];
-        this.op = pass.op;
-        this.na = pass.a ? Object.keys(pass.a).length : 0;
-        this.nb = pass.b ? Object.keys(pass.b).length : 0;
-        this.nx = this.na + this.nb;
-        this.step = (win.w / 2.2) / Math.max(this.na, this.nb);
-        for (let i = 0; i < this.na; i++) 
-            this.a[i] = pass.a[i] - min + 1;
-        for (let i = 0; i < this.nb; i++)
-            this.b[i] = pass.b[i] - min + 1;
-    }
-    display() {
-        for(let i = 0; i < 8; i++) ptr[i].classList.add("hidden");
-        this.step = (win.w / 2.2) / Math.max(this.na, this.nb);
-        let x;
-        let y;
-        let moved_a = [];
-        let moved_b = [];
-        op_count = 'Operation #' + it;
-        switch (this.op) {
-            case 'init':
-                op_details = 'INIT >> stacks a and b initialized';
-                break;
-            case 'sa':
-                op_details = 'SA >> swaps a[0] and a[1]'
-                moved_a[0] = 0;
-                moved_a[1] = 1;
-                break;
-            case 'sb':
-                op_details = 'SB >> swaps b[0] and b[1]'
-                moved_b[0] = 0;
-                moved_b[1] = 1;
-                break;
-            case 'ss':
-                op_details = 'SS >> swaps a[0] with a[1] and b[0] with b[1]'
-                moved_a[0] = 0;
-                moved_a[1] = 1;
-                moved_b[0] = 0;
-                moved_b[1] = 1;
-                break;
-            case 'pa':
-                op_details = 'PA >> pushes b[0] to top of a[0]'
-                moved_a[0] = 0;
-                moved_b[0] = 0;
-                break;
-            case 'pb':
-                op_details = 'PB >> pushes a[0] top of b[0]'
-                moved_a[0] = 0;
-                moved_b[0] = 0;
-                break;
-            case 'ra':
-                op_details = 'RA >> rotates forward stack a >> a[0] becomes a[last]'
-                moved_a[0] = this.na - 1;
-                break;
-            case 'rb':
-                op_details = 'RB >> rotates forward stack b >> b[0] becomes b[last]'
-                moved_b[0] = this.nb - 1;
-                break;
-            case 'rr':
-                op_details = 'RR >> rotates forward stacks a and b >> a[0] becomes a[last] and b[0] becomes b[last]'
-                moved_a[0] = this.na - 1;
-                moved_b[0] = this.nb - 1;
-                break;
-            case 'rra':
-                op_details = 'RRA >> rotates backward stack a >> a[last] becomes a[0]'
-                moved_a[0] = 0;
-                break;
-            case 'rrb':
-                op_details = 'RRB >> rotates backward stack a >> a[last] becomes a[0]'
-                moved_b[0] = 0;
-                break;
-            case 'rrr':
-                op_details = 'RRA >> rotates backward stacks a and b >> a[last] becomes a[0] and b[last] becomes b[0]'
-                moved_a[0] = 0;
-                moved_b[0] = 0;
-                break;
-            default:
-                moved_a[0] = this.na;
-                moved_a[1] = this.na;
-                moved_b[0] = this.nb;
-                moved_b[1] = this.nb;
-        }
-        details_pane.innerHTML = op_count + ": " + op_details;
-        strokeWeight(1);
-        stroke(color(clrs.a_out));
-        fill(color(clrs.a_in));
-        let ptr_index = 0;
-        for (let i = 0; i < this.na; i++) {
-            y = this.a[i] * mult;
-            x = x_pad + (this.step) * i;
-            if (i == moved_a[0] || i == moved_a[1]) {
-                move_ptr(x, ptr_index++);
-                fill(color(clrs.a_out));
-                stroke(color(clrs.a_in));
-                rect(x, -y, this.step - 2, y);
-                stroke(color(clrs.a_out));
-                fill(color(clrs.a_in));
-            }
-            else rect(x, -y, this.step - 2, y);
-        }
-        stroke(color(clrs.b_out));
-        fill(color(clrs.b_in));
-        for (let i = 0; i < this.nb; i++) {
-            y = this.b[i] * mult;
-            x = (win.w / 2) + x_pad + (this.step) * i;
-            if (i == moved_b[0] || i == moved_b[1]) {
-                move_ptr(x, ptr_index++);
-                fill(color(clrs.b_out));
-                stroke(color(clrs.b_in));
-                rect(x, -y, this.step - 2, y);
-                stroke(color(clrs.b_out));
-                fill(color(clrs.b_in));
-            }
-            else rect(x, -y, this.step - 2, y);
-        }
-        if (looping && it == (nb_op)) {
-            start_button.innerHTML = looping ? "▶ START" : "▣ STOP";
-            looping ? noLoop() : loop();
-            looping = looping ? false : true;
-        }
-    }
-}
-
-//move bar indicators
-function move_ptr(x, i) {
-    ptr[i].style.left = x - (win.w * 0.014) + 'px';
-    ptr[i + 4].style.left = x - (win.w * 0.007) + 'px';
-    ptr[i].classList.remove("hidden");
-    ptr[i + 4].classList.remove("hidden");
-}
-
-//stacks interpreter
-function get_stacks(int_list, op_list) {
-    nb_op = op_list.length;
-    for (let i = 0; i <= nb_op; i++) {
-        if (i == 0) {
-            stack[i] = new Stack('init', int_list, null);
-            //console.log("i:", i, "list[0]: ", stack[i].a[0], "list[1]: ", stack[i].a[1], "op:", stack[i].op); console.log(stack[i].a);
-        }
-        else
-        {
-            let dump_a = stack[i - 1].a ? stack[i - 1].a.slice(0) : null;
-            let dump_b = stack[i - 1].b ? stack[i - 1].b.slice(0) : null;
-            stack[i] = new Stack(op_list[i - 1], dump_a, dump_b);
-            let A4 = stack[i].a ? stack[i].a.length - 1 : 0;
-            let B4 = stack[i].b ? stack[i].b.length - 1 : 0;
-            switch (stack[i].op) {
-                case 'ss':
-                case 'sa':
-                    if (stack[i].a && typeof stack[i].a[0] !== 'undefined' && typeof stack[i].a[1] !== 'undefined'){
-                        [stack[i].a[0], stack[i].a[1]] = [stack[i].a[1], stack[i].a[0]];
-                    }
-                    if (stack[i].op == 'sa')
-                        break;
-                case 'sb':
-                    if (stack[i].b && typeof stack[i].b[0] !== 'undefined' && typeof stack[i].b[1] !== 'undefined')
-                        [stack[i].b[0], stack[i].b[1]] = [stack[i].b[1], stack[i].b[0]]; 
-                    break;
-                case 'pa':
-                    if (stack[i].b) {
-                        if (!(stack[i].a)) stack[i].b = [];
-                        stack[i].a.unshift(stack[i].b[0]);
-                        stack[i].b.shift();
-                    }
-                    break;
-                case 'pb':
-                    if (stack[i].a) {
-                        if (!(stack[i].b)) stack[i].b = [];
-                        stack[i].b.unshift(stack[i].a[0]);
-                        stack[i].a.shift();
-                    }
-                    break;
-                case 'rr':
-                case 'ra':
-                    if (stack[i].a && typeof stack[i].a[A4] !== 'undefined') {
-                        stack[i].a.push(stack[i].a[0]);
-                        stack[i].a.shift();
-                    }
-                    if (stack[i].op == 'ra')
-                        break;
-                case 'rb':
-                    if (stack[i].b && typeof stack[i].b[B4] !== 'undefined') {
-                        stack[i].b.push(stack[i].b[0]);
-                        stack[i].b.shift();
-                    }
-                    break;
-                case 'rrr':
-                case 'rra':
-                    if (stack[i].a && typeof stack[i].a[A4] !== 'undefined') {
-                        stack[i].a.unshift(stack[i].a[A4]);
-                        stack[i].a.pop();
-                    }
-                    if (stack[i].op == 'rra')
-                        break;
-                case 'rrb':
-                    if (stack[i].b && typeof stack[i].b[B4]) {
-                        stack[i].b.unshift(stack[i].b[B4]);
-                        stack[i].b.pop();
-                    }
-                    break;
-            }
-            //console.log("i:", i, "op:", stack[i].op); console.log("A:", stack[i].a, "B:", stack[i].b);
-        }
-    }
-}
-
-//initialization function
-function setup() {
-    noLoop();
-    ptr[0] = document.getElementById('ptr_1');
-    ptr[1] = document.getElementById('ptr_2');
-    ptr[2] = document.getElementById('ptr_3');
-    ptr[3] = document.getElementById('ptr_4');
-    ptr[4] = document.getElementById('ptr_5');
-    ptr[5] = document.getElementById('ptr_6');
-    ptr[6] = document.getElementById('ptr_7');
-    ptr[7] = document.getElementById('ptr_8');
-    title = document.getElementById('title');
-    txt_obj = document.getElementsByClassName("txt");
-    clr_button = document.getElementById('bt0');
-    start_button = document.getElementById('bt1');
-    details_box = document.getElementById("show_details");
-    details_pane = document.getElementById("details_pane");
-    clr_pane = document.getElementById("clr_pane");
-    clr_option = document.getElementById("clr_select");
-    clr_caption = document.getElementById("clr_caption");
-    speed_slider = document.getElementById('speed_slider');
-    speed_box = document.getElementById('speed_box');
-    container = document.getElementById('speed_set');
-    commands_list = document.getElementById('commands').innerHTML;
-    unsorted_list = document.getElementById('int_list').innerHTML;
-    canvas = createCanvas(win.w, win.h);
-    //canvas.position(0, 0);
-    //canvas.style('display', 'absolute');
-    bar_w = container.offsetWidth;
-    speed_slider.addEventListener('input', refresh_box);
-    speed_box.addEventListener('input', refresh_box);
-    //document.getElementById("title_div").className '+=' "rubberBand animated";
-    op_list = JSON.parse(commands_list).commands;
-    int_list = JSON.parse(unsorted_list).unsorted_list;
-    //nb_int = Object.keys(int_list).length;
-    nb_int = int_list.length;
-    nb_op = op_list.length;
-    max = int_list.max();
-    min = int_list.min();
-    mult = (win.h / 1.52) / (max - min);
-    get_stacks(int_list, op_list);
-    for (let pass = 0; pass <= nb_op; pass++)
-        bars[pass] = new Bars(stack[pass]);
-}
-
 //canvas resize on viewport change
-function canvas_resize() {
+function canvas_resize(){
     win.w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     win.h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     resizeCanvas(win.w, win.h, true);
 }
-
-//window resize on viewport change
-function windowResized() {
-    canvas_resize();
-    set_origin();
-    set_speed();
-    bars[it].display();
+/*
+function mouseReleased() {
+    env.count += 1;
+    for (let i = 0; i < env.nb_rooms; i++){
+        if (df[i].is_end){
+            for (let j = 0; j < ((df[i].move.length)); j++){
+                //print "env.clr = ", env.clr
+                if (env.count == df[i].move[j])
+                    env.clr += (255 / (int(env.nb_ants) + 1));
+            }
+        }
+    }
+    if (env.count == turn + 1){
+        env.count = 0;
+        //env.clr = 255 / int(env.nb_ants);
+        env.clr = 0;
+    }
+}
+*/
+function work_out(data){
+    //print "nb_ants = ", nb_ants
+    let z = 0;
+    let j = 0;
+    turn = 1;
+    for (let i = 0; i < nb_lines; i++){
+        //console.log("A");
+        if (!data[i])
+            continue ;
+        else if (data[i][0].includes("#")){
+            //console.log("B");
+            //next(myiter, None);
+            if (data[i].includes("##start")){
+                i += 1;
+                df[j] = new Room(data[i][0], int(data[i][1])*win.scl, int(data[i][2])*win.scl, int(z)*win.scl*2);
+                df[j].set_start();
+                //print df[j].name, df[j].x, df[j].y, df[j].z, df[j].is_start, df[j].is_end;
+                env.nb_rooms += 1;
+                //i -= 1;
+                //continue;
+                j += 1;
+            }
+            else if (data[i].includes("##end")){
+                i += 1;
+                //print data[i];
+                df[j] = new Room(data[i][0], int(data[i][1])*win.scl, int(data[i][2])*win.scl, int(z)*win.scl*2);
+                df[j].set_end();
+                //print df[j].name, df[j].x, df[j].y, df[j].z, df[j].is_start, df[j].is_end;
+                env.nb_rooms += 1;
+                //i -= 1;
+                //continue;
+                j += 1;
+            }
+        }
+        else if (data[i][0].includes("-") && !(data[i][0].includes("L"))){
+            //console.log("C");
+            let link_room = data[i][0].split("-");
+            for (let k = 0; k < (env.nb_rooms); k++){
+                //console.log("k =",k);
+                let room_name = df[k].get_name();
+                if (room_name == link_room[0]){
+                    for (let l = 0; l < (env.nb_rooms); l++){
+                        let link_name = df[l].get_name();
+                        if (link_name == link_room[1]){
+                            df[k].add_link(df[l]);
+                            //print "room = ", df[k].name, "link = ", df[k].link;
+                            break ;
+                        }
+                    }
+                    break ;
+                }
+            }
+        }
+        else if (data[i][0].includes("L")){
+            //console.log("D");
+            //print "data[i] = ", data[i]
+            for (j = 0; j < ((data[i].length)); j++){
+                let move_line = data[i][j].split("-");
+                //console.log(move_line);
+                for (let m = 0; m < env.nb_rooms; m++){
+                    let room_name = df[m].get_name();
+                    //print "room_name = ", room_name;
+                    //print "move_line[1] = ", move_line[1];
+                    if (room_name == move_line[1]){
+                        df[m].set_fw();
+                        console.log(df[m]);
+                        //console.log("df[m].move =", df[m].move);
+                    }
+                }
+            }
+            turn += 1
+            //print "move_line = ", move_line;
+            //print data[i];
+            //pass;
+        }
+        else if (data[i][1] && data[i][2]){
+            //console.log("E");
+            df[j] = new Room(data[i][0], int(data[i][1])*win.scl,
+                int(data[i][2])*win.scl, int(z)*win.scl*2)
+            //print df[j].name, df[j].x, df[j].y, df[j].z, df[j].is_start, df[j].is_end
+            env.nb_rooms += 1
+            j += 1
+        }
+        z += 1
+    }
+    let tx = (x_min() + x_max()) / 2;
+    let ty = (y_min() + y_max()) / 2;
+    let tz = (z_min() + z_max()) / 2;
+    for (let o = 0; o < env.nb_rooms; o++){
+        df[o].x -= tx;
+        df[o].y -= ty;
+        df[o].z -= tz;
+    }
+    console.log(df);
+    return (1);
 }
 
-//change canvas origin
-function set_origin() {
-    translate(0, height / 6 * 5); //set bottom left as origin
-    background(color(clrs.back));
-    stroke(color(clrs.txt_back));
-    strokeWeight(1);
-    line(0, 0, win.w, 0);
-    line(win.w / 2, 0, win.w / 2, -win.h / 6 * 4.15);
+function draw_lines(){
+    for (let j = 0; j < env.nb_rooms; j++){
+        if ((df[j].link)){
+            push();
+            for (let i = 0; i < ((df[j].link.length)); i++){
+                strokeWeight(1);
+                stroke(120,120,120);
+                if ((df[j].is_fw || df[j].is_start) && (df[j].link[i].is_fw || df[j].link[i].is_end)){
+                    stroke(0,255,0);
+                    strokeWeight(4);
+                }
+                line(df[j].x, df[j].y, df[j].z + win.scl*2,
+                    df[j].link[i].x, df[j].link[i].y, df[j].link[i].z + win.scl*2);
+            }
+            pop();
+        }
+    }
+}
+
+function base_lights(){
+    ambientLight(128, 128, 128);
+    directionalLight(128, 128, 128, 0, 0, -1);
+    //lightFalloff(1, 0, 0);
+    //lightSpecular(0, 0, 0);
+}
+
+function x_max(){
+    let x = 0;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if (df[i].x > x)
+            x = df[i].x;
+    return (x);
+}
+function x_min(){
+    let x = 1000000;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if (df[i].x < x)
+            x = df[i].x;
+    return (x);
+}
+function y_max(){
+    let y = 0;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if (df[i].y > y)
+            y = df[i].y;
+    return (y);
+}
+function y_min(){
+    let y = 1000000;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if (df[i].y < y)
+            y = df[i].y;
+    return (y);
+}
+function z_max(){
+    let z = 0;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if ((df[i].z + win.scl*2) > z)
+            z = (df[i].z + win.scl*2);
+    return (z);
+}
+function z_min(){
+    let z = 1000000;
+    for (let i = 0; i < env.nb_rooms; i++)
+        if (df[i].z < z)
+            z = df[i].z;
+    return (z);
+}
+
+function draw_rooms(){
+    for (let i = 0; i < env.nb_rooms; i++){
+        strokeWeight(2)
+        if (df[i].is_start){
+            push();
+            //noStroke();
+            stroke(255);
+            //fill(255, 0, 255);
+            //base_lights();
+            translate(df[i].x, df[i].y, df[i].z+win.scl*2);
+            ambientMaterial(255,0,255);
+            box(win.scl*5);
+            pop();
+        }
+        else if (df[i].is_end){
+            push();
+            stroke(255);
+            //fill(0, 200, 200, env.clr);
+            //base_lights();
+            translate(df[i].x, df[i].y, df[i].z+win.scl*2);
+            ambientMaterial(0,255,255);
+            box(win.scl*5);
+            pop();
+        }
+        else if (!(df[i].is_start) && !(df[i].is_end)){
+            push();
+            //base_lights();
+            //noStroke();
+            stroke(0);
+            (df[i].is_fw) ? ambientMaterial(0,255,0) : ambientMaterial(150,150,150);
+            /*
+            for (let j = 0; j < ((df[i].move.length)); j++){
+                //console.log("df[i].name =", df[i].name);
+                //console.log("df[i].move =", df[i].move[j]);
+                //console.log("len = ", (df[i].move.length));
+                //delay(5000)
+                if (env.count != df[i].move[j]){
+                    fill(255);
+                }
+                    //print "df[i].name = ", df[i].name
+                else{
+                    fill(100);
+                    break ;
+                }
+            }
+            */
+            //print "turn = ", turn
+            translate(df[i].x, df[i].y, df[i].z+win.scl*2);
+            (df[i].is_fw) ? box(win.scl*3.5) : box(win.scl*2.5);
+            pop();
+        }
+    }
+    //print df[i].name, df[i].x, df[i].y, df[i].z, df[i].is_start, df[i].is_end, df[i].link
+}
+
+//initialization function
+function setup(){
+    //noLoop();
+    lines_json = document.getElementById('lines').innerHTML;
+    lines = JSON.parse(lines_json).lines;
+    nb_lines = lines.length;
+    for (let i = 0; i < nb_lines; i++)
+        data[i] = lines[i].split(" ");
+    env.nb_ants = data[0];
+    //console.log(data[0]);
+    //console.log("env.nb_ants = ", env.nb_ants);
+    //console.log("env.clr = ", env.clr);
+    env.clr = 255; // int(env.nb_ants)
+    console.log("lines:", lines);
+    console.log("data:", data);
+    console.log("env.clr =", env.clr);
+    console.log("env.nb_ants =", env.nb_ants);
+    console.log("nb lines:", nb_lines);
+    work_out(data);
+    frameRate(30);
+    canvas = createCanvas(win.w, win.h, WEBGL);
+    title = document.getElementById('title');
+    //translate((x_min() + x_max()) / 2, (y_min() + y_max()) / 2);
+    rectMode(CENTER);
+    env.centerX = 0;
+    env.centerY = 0;
+    env.camX = 0;
+    env.camY = 0;
+    win.scl = 10 + (env.nb_rooms); //+ (((y_max() - y_min()) * (x_max() - x_min())) / 70000000);
+    console.log(win.scl);
+}
+
+function keyPressed(){
+    switch (keyCode){
+		//multi
+        case 37: _left = _left ? false : true; _right = false; break;
+        case 38: _up = _up ? false : true; _down = false; break;
+        case 39: _right = _right ? false : true; _left = false; break;
+        case 40: _down = _down ? false : true; _up = false; break;
+	    case 82: _r = true; break;
+        case 107: _plus = _plus ? false : true; _minus = false; break;
+        case 109: _minus = _minus ? false : true; _plus = false; break;
+		//windows
+        case 97: _1 = _1 ? false : true; _3 = false; break;
+        case 98: _2 = _2 ? false : true; _8 = false; break;
+        case 99: _3 = _3 ? false : true; _1 = false; break;
+        case 100: _4 = _4 ? false : true; _6 = false; break;
+        case 101: _5 = _5 ? false : true; break;
+        case 102: _6 = _6 ? false : true; _4 = false; break;
+        case 103: _7 = _7 ? false : true; break;
+        case 104: _8 = _8 ? false : true; _2 = false; break;
+        case 105: _9 = _9 ? false : true; break;
+	    //mac
+        case 49: _1 = _1 ? false : true; _3 = false; break;
+        case 50: _2 = _2 ? false : true; _8 = false; break;
+        case 51: _3 = _3 ? false : true; _1 = false; break;
+        case 52: _4 = _4 ? false : true; _6 = false; break;
+        case 53: _5 = _5 ? false : true; break;
+        case 54: _6 = _6 ? false : true; _4 = false; break;
+        case 55: _7 = _7 ? false : true; break;
+        case 56: _8 = _8 ? false : true; _2 = false; break;
+        case 57: _9 = _9 ? false : true; break;
+   	}
+    if (_r){ //RESET setting
+        _plus = false;
+        _minus = false;
+        _1 = false;
+        _2 = false;
+        _3 = false;
+        _4 = false;
+        _5 = false;
+        _6 = false;
+        _7 = false;
+        _8 = false;
+        _9 = false;
+        _up = false;
+        _down = false;
+        _left = false;
+        _right = false;
+        env.x = 0;
+        env.y = 0;
+        env.z = 0;
+        env.camZ = -2000;
+        /*
+        env.centerX = (x_min() + x_max()) / 2;
+        env.centerY = (y_min() + y_max()) / 2;
+        env.camX = (x_min() + x_max()) / 2;
+        env.camY = (y_min() + y_max()) / 2;
+        */
+        env.centerX = 0;
+        env.centerY = 0;
+        env.camX = 0;
+        env.camY = 0;
+        env.centerZ = 0;
+        env.upX = 0;
+        env.upY = 1;
+        env.upZ = 0;
+        zoom = 1.00;
+        zMin = 0.05;
+        zMax = 9.00;
+        accuracy = 0.0005;
+        _r = false;
+    }
+    /*
+    console.log("cam centerX:", env.centerX, "cam centerY:", env.centerY);
+    console.log("X max:", x_max(), "X min:", x_min());
+    console.log("Y max:", y_max(), "Y min:", y_min());
+    */
+	//console.log(keyCode);
+}
+
+/*
+function keyReleased(){
+    switch (keyCode){
+        case 37: _left = false; break;
+        case 38: _up =  false; break;
+        case 39: _right = false; break;
+        case 40: _down = false; break;
+        case 97: _1 = false; break;
+        case 98: _2 = false; break;
+        case 99: _3 = false; break;
+        case 100: _4 = false; break;
+        case 101: _5 = false; break;
+        case 102: _6 = false; break;
+        case 103: _7 = false; break;
+        case 104: _8 = false; break;
+        case 105: _9 = false; break;
+        case 82: _r = false; break;
+        case 107: _plus = false; break;
+        case 109: _minus = false; break;
+    }
+    console.log(keyCode);
+}
+*/
+
+function change_view(){
+    /*
+    translate((x_min() + x_max()) / 2, (y_min() + y_max()) / 2);
+    env.centerX = 0;
+    env.centerY = 0;
+    env.camX = 0;
+    env.camY = 0;
+    */
+    camera(env.camX, env.camY, env.camZ, env.centerX, env.centerY,
+        env.centerZ, env.upX, env.upY, env.upZ);
+}
+
+function zoom_in(delta){
+    zoom -= accuracy * delta;
+    zoom = constrain(zoom, zMin, zMax);
+}
+
+function mouseWheel(event){
+    zoom_in(event.delta);
+    return false;
 }
 
 //p5js loop function at every FPS (OPS)
-function draw() {
-    canvas_resize();
-    set_origin();
-    set_speed();
-    bars[it].display();
-    if (looping && it < nb_op) it++;
-}
-
-//buttons callback functions
-
-//reset stacks to initial state
-function _reset() {
-    it = 0;
-    redraw();
-    looping == false ? noLoop() : 0;
-}
-
-//next op
-function _next() {
-    //for(let i = 0; i < 8; i++) ptr[i].classList.remove("hidden");
-    start_button.innerHTML = "▶ START";
-    looping = false;
-    it = it < nb_op ? ++it : it;
-    redraw();
-    noLoop();
-}
-
-//previous op
-function _prev() {
-    //for(let i = 0; i < 8; i++) ptr[i].classList.remove("hidden");
-    start_button.innerHTML = "▶ START";
-    looping = false;
-    it = it > 1 ? --it : 0;
-    redraw();
-    noLoop();
-}
-
-//start / stop
-function _switch() {
-    start_button.innerHTML = looping ? "▶ START" : "▣ STOP";
-    //if (looping) for(let i = 0; i < 4; i++) ptr[i].classList.remove("hidden"); //toggle = add or remove depending on previous state
-    if (!looping) for(let i = 0; i < 8; i++) ptr[i].classList.add("hidden");
-    noLoop();
-    looping ? noLoop() : loop();
-    looping = looping ? 0 : 1;
-    it == nb_int ? _reset() : 0;
-}
-
-//ui buttons callback functions
-
-//toggle operation details
-function toggle_details() {
-    if (details_box.checked == true) details_pane.classList.remove("hidden");
-    else details_pane.classList.add("hidden");
-}
-
-//toggle color picker
-var clr_pane_on = 0;
-function toggle_colors() {
-    clr_pane_on ^= 1;
-    clr_button.innerHTML = clr_pane_on ? "OK ✓" : "COLORS";
-    if (clr_pane_on == true) clr_pane.classList.remove("hidden");
-    else clr_pane.classList.add("hidden");
-}
-
-//color picker callback function
-color_picker.on("color:change", function(clr){
-    if (clr_caption) {
-        clr_caption.innerHTML = [
-        "hex: " + clr.hexString,
-        "rgb: " + clr.rgbString,
-        "hsl: " + clr.hslString,
-        ].join("<br>");
-        color_switch(clr_option.options[clr_option.selectedIndex].value, clr);
-    }
-});
-
-function color_switch(option, clr) {
-    switch (option) {
-        case "1":
-            clrs.back = clr.rgbString;
-            document.body.style.backgroundColor = clr.back;
-            break; 
-        case "2":
-            clrs.txt_back = clr.rgbString;
-            for (let i = 0; i < txt_obj.length; i++)
-                txt_obj[i].style.backgroundColor = clrs.txt_back;
-            title.style.backgroundColor = "transparent";
-            break;
-        case "3":
-            clrs.txt = clr.rgbString;
-            for (let i = 0; i < txt_obj.length; i++)
-                txt_obj[i].style.color = clrs.txt;
-            break;
-        case "4": clrs.a_out = clr.rgbString; break;
-        case "5": clrs.b_out = clr.rgbString; break;
-        case "6": clrs.a_in = clr.rgbString; break;
-        case "7": clrs.b_in = clr.rgbString; break;
-    }
-    draw();
-    console.log(option, clr.rgbString, clrs.a_out);
-    //console.log("clr changed: " + option + clr.rgbString);
-}
-
-//callback function to update OPS slidebar
-function refresh_box() {
-    bar_w = container.offsetWidth;
-    speed_box.style.left = Math.round(((bar_w - 14) * (speed_slider.value) / 60) - 21, 0) + 'px';
-    set_speed();
-}
-
-//callback to change speed (FPS) on OPS slidebar change
-function set_speed() {
-    frameRate(speed_box.value * 1);
+function draw(){
+    background(0);
+    change_view();
+    base_lights();
+    //pointLight(200,0,0,0,500,0);
+    _8 ? env.x -= 1 : 0;
+    _2 ? env.x += 1 : 0;
+    _6 ? env.y += 1 : 0;
+    _4 ? env.y -= 1 : 0;
+    _3 ? env.z -= 1 : 0;
+    _1 ? env.z += 1 : 0;
+    _plus ? zoom_in(-20) : 0;
+    _minus ? zoom_in(20) : 0;
+    _left ? env.centerX += 5 : 0;
+    _right ? env.centerX -= 5 : 0;
+    _up ? env.centerY -= 5 : 0;
+    _down ? env.centerY += 5 : 0;
+    scale(zoom);
+    rotateX(env.x * 0.015);
+    rotateY(env.y * 0.015);
+    rotateZ(env.z * 0.015);
+    draw_rooms();
+    draw_lines();
 }

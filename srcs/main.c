@@ -1,67 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyildiz- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/10 18:26:08 by jyildiz-          #+#    #+#             */
-/*   Updated: 2018/05/23 11:02:07 by fmadura          ###   ########.fr       */
+/*   Created: 2018/06/20 18:25:46 by pde-rent          #+#    #+#             */
+/*   Updated: 2018/06/24 21:13:28 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "lem_in.h"
 
-static int			put_unindexed_piles(t_env *env)
+static void		make_magic_happen(t_env *env)
 {
-	int		i;
-
-	i = env->a1 - 1;
-	dprintf(2, "env_size: %d env[i]: %d\n", env->size, (int)env->a[i]);
-	while (++i < env->size)
-	{
-		dprintf(2, "a1: %d env->a[1]: %ld\n", env->a1, env->c[(int)env->a[i]]);
-		env->a[i] = env->c[(int)env->a[i]];
-		pstr(2, "OK", '\n');
-	}
-	put_piles(env);
-	return (1);
-}
-
-static int			make_magic_happen(t_env *env)
-{
-	IS_SET_S ? pstr(2, "Piles before sort:", '\n') : 0;
-	IS_SET_S ? put_piles(env) : 0;
-	index_pile(env);
-	IS_SET_R ? pstr(2, "Piles rebased before sort:", '\n') : 0;
-	IS_SET_R ? put_piles(env) : 0;
-	sort_pile(env);
-	IS_SET_R ? pstr(2, "Piles rebased after sort:", '\n') : 0;
-	IS_SET_R ? put_piles(env) : 0;
-	IS_SET_S ? pstr(2, "Piles after sort:", '\n') : 0;
-	IS_SET_S ? put_unindexed_piles(env) : 0;
-	optimize(env);
-	IS_SET_O ? pstr(2, "# operations: ", '\0') : 0;
-	IS_SET_O ? plong(2, count_moves(env), '\n') : 0;
-	pstr(2, "Commands:", '\n');
-	put_moves(env->first_move, 1, ' ');
+	anthill_complete(env);
+	genetic_solve(env);
+	IS_SET_M ? 0 : put_lines(env);
+	IS_SET_R ? put_rooms(env) : 0;
+	IS_SET_L ? put_links(env) : 0;
+	IS_SET_S ? put_fwinfo(env) : 0;
+	// move_colony(env);
 	deinit_env(env);
-	return (1);
+	exit(EXIT_SUCCESS);
 }
 
-int					main(int ac, char **av)
+static int		get_option(t_env *env, char *av, int i)
+{
+	while (av[++i])
+	{
+		if ((av[i] != 'u' && av[i] != 'm' && av[i] != 'a' && av[i] != 'l'
+			&& av[i] != 'r' && av[i] != 's' && av[i] != 'v' && av[i] != 'h'
+			&& av[i] != 'e'))
+			put_error(env, "Error: invalid option");
+		else if ((av[i] == 'u' && IS_SET_U) || (av[i] == 'm' && IS_SET_M)
+			|| (av[i] == 'a' && IS_SET_A) || (av[i] == 'l' && IS_SET_L)
+			|| (av[i] == 'r' && IS_SET_R) || (av[i] == 's' && IS_SET_S)
+			|| (av[i] == 'v' && IS_SET_V) || (av[i] == 'h' && IS_SET_H)
+			|| (av[i] == 'e' && IS_SET_E))
+			put_error(env, "Error: duplicate option");
+		(av[i] == 'u') ? SET_U : 0;
+		(av[i] == 'm') ? SET_M : 0;
+		(av[i] == 'a') ? SET_A : 0;
+		(av[i] == 'l') ? SET_L : 0;
+		(av[i] == 'r') ? SET_R : 0;
+		(av[i] == 's') ? SET_S : 0;
+		(av[i] == 'v') ? SET_V : 0;
+		(av[i] == 'h') ? SET_H : 0;
+		(av[i] == 'e') ? SET_E : 0;
+	}
+	return (active_bits(env->option));
+}
+
+int				main(int ac, char **av)
 {
 	t_env	env;
+	int		i;
 
-	init_env(&env, ac);
-	if (ac < 2 || !av[1] || !arg_to_piles(&env, ac, av)
-		|| env.a[env.a1] == NONE || env.size == 0)
-		put_error(&env, "Error: wrong input");
-	if (ac == 2 || all_sort(&env))
+	signal(SIGINT, sig_handler);
+	init_env(&env);
+	i = 0;
+	while (++i < ac && av[i] && av[i][0] == '-')
 	{
-		deinit_env(&env);
-		exit(0);
+		get_option(&env, av[i], 0);
+		(env.option & (1 << 7)) ? put_usage(&env) : 0;
 	}
+	get_lines(&env);
 	make_magic_happen(&env);
 	return (1);
 }

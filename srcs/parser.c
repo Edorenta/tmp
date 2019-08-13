@@ -3,89 +3,106 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyildiz- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/12 05:11:42 by jyildiz-          #+#    #+#             */
-/*   Updated: 2018/05/15 18:01:54 by fmadura          ###   ########.fr       */
+/*   Created: 2018/06/20 18:26:00 by pde-rent          #+#    #+#             */
+/*   Updated: 2018/06/20 18:26:01 by pde-rent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "lem_in.h"
 
-static int		push_to_pile(t_env *env, char *av)
+static int		get_ants(t_env *env, const char *p)
 {
-	static int	i = -1;
-
-	!is_int(av) ? put_error(env, "Error: arg not int") : 0;
-	env->a[++i] = ft_atol(av);
-	!no_duplicates(env->a, i + 1) ? put_error(env, "Error: duplicates") : 0;
+	env->nb_ants = fatol(env, p);
+	if (env->nb_ants > 2147483647 || env->nb_ants <= 0)
+		put_error(env, "Error: expected a positive ant colony size");
 	return (1);
 }
 
-static int		split_to_pile(t_env *env, char *str, int spaces)
+static int		get_room(t_env *env, const char *p, int x, int y)
 {
-	char		av[spaces][16];
-	char		*p;
-	int			i;
-	int			j;
+	int		i;
+	char	tmp[3][256];
 
-	i = 0;
-	p = str;
-	while (*p)
-	{
-		while (*p && is_space(*p))
-			p++;
-		j = -1;
-		while (*p && ((*p >= '0' && *p <= '9') || *p == '-' || *p == '+'))
-			av[i][++j] = *(p++);
-		av[i][++j] = '\0';
-		i++;
-	}
 	i = -1;
-	while (++i < (spaces))
-		push_to_pile(env, av[i]);
-	return (spaces);
-}
-
-static int		get_option(t_env *env, char *av)
-{
-	int i;
-
-	i = 0;
-	while (av[++i])
-	{
-		if ((av[i] != 'v' && av[i] != 's' && av[i] != 'o'&& av[i] != 'r'))
-			put_error(env, "Error: invalid option");
-		else if ((av[i] == 'v' && IS_SET_V) || (av[i] == 's' && IS_SET_S)
-			|| (av[i] == 'o' && IS_SET_O) || (av[i] == 'r' && IS_SET_R))
-			put_error(env, "Error: duplicate option");
-		(av[i] == 'v') ? SET_V : 0; //verbose breakpoints
-		(av[i] == 'o') ? SET_O : 0; //move counter
-		(av[i] == 's') ? SET_S : 0; //pile state
-		(av[i] == 'r') ? SET_R : 0; //display A as rebased
-	}
-	return (active_bits(env->option));
-}
-
-int				arg_to_piles(t_env *env, int ac, char **av)
-{
-	int			i;
-	int			opt;
-
-	opt = 0;
-	i = 0;
-	while (++i < ac && av[i] && av[i][0] == '-'){
-		opt += get_option(env, av[i]);
-		--env->size;
-	}
-	i--;
-	while (++i < ac && av[i])
-		env->size += spaces_in(av[i]);
-	alloc_piles(env);
-	i = opt ? 1 : 0;
-	while (++i < ac && av[i])
-		spaces_in(av[i]) ? split_to_pile(env, av[i], spaces_in(av[i]) + 1)
-		: push_to_pile(env, av[i]);
-	env->b1 = env->size - 1;
+	while (!p[++i] || !is_space(p[i]))
+		if (!p[i] || (p[0] == 'L') || (p[i] == '-'))
+			return (0);
+		else
+			tmp[0][i] = p[i];
+	tmp[0][i] = '\0';
+	while (!p[++i] || !is_space(p[i]))
+		if (!p[i] || !is_digit(p[i]))
+			return (0);
+		else
+			tmp[1][++x] = p[i];
+	tmp[1][++x] = '\0';
+	while ((p[++i]))
+		if (!is_digit(p[i]))
+			return (0);
+		else
+			tmp[2][++y] = p[i];
+	tmp[2][++y] = '\0';
+	new_room(env, tmp[0], fatol(env, tmp[1]), fatol(env, tmp[2]));
 	return (1);
+}
+
+static int		get_link(t_env *env, const char *p, int i, int j)
+{
+	t_room	*room1;
+	t_room	*room2;
+	char	tmp[256];
+
+	while (!p[++i] || p[i] != '-')
+		if (!p[i] || is_space(p[i]))
+			return (0);
+		else
+			tmp[i] = p[i];
+	tmp[i] = '\0';
+	room1 = str_to_room(env, tmp);
+	while (p[++i])
+		if (is_space(p[i]))
+			return (0);
+		else
+			tmp[++j] = p[i];
+	tmp[++j] = '\0';
+	room2 = str_to_room(env, tmp);
+	new_link(env, room1, room2);
+	return (1);
+}
+
+static int		check_room(t_env *env, const char *p)
+{
+	if ((!env->start || !env->end))
+		put_error(env, "Error: incomplete room list or invalid room name");
+	(!get_link(env, p, -1, -1)) ? put_error(env, "Error: wrong input") : 0;
+	return (1);
+}
+
+int				interpret_line(t_env *env, const char *p)
+{
+	static int state = 0;
+
+	if (state == 0)
+	{
+		if (p[0] == '#' && scmp(p, "##start") && scmp(p, "##end"))
+			return ((1));
+		return ((get_ants(env, p) ? (state = 1) : 0));
+	}
+	if (!p || (p[0] && p[0] == '#' && scmp(p, "##start") && scmp(p, "##end")))
+		return (1);
+	if (!scmp(p, "##start") || !scmp(p, "##end"))
+	{
+		((!scmp(p, "##start") && env->start) || (!scmp(p, "##end") && env->end))
+		? put_error(env, "Error: duplicate command") : 0;
+		return ((state = (!scmp(p, "##start") ? 2 : 3)));
+	}
+	if (state == 4)
+		return ((get_link(env, p, -1, -1) ? 4 : 0));
+	if (!(get_room(env, p, -1, -1)) && check_room(env, p))
+		return ((state = 4));
+	state == 2 ? (env->start = env->last_parsed_room->room) : 0;
+	state == 3 ? (env->end = env->last_parsed_room->room) : 0;
+	return ((state = 1));
 }

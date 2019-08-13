@@ -6,51 +6,38 @@
 #    By: pde-rent <pde-rent@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/16 02:57:04 by pde-rent          #+#    #+#              #
-#    Updated: 2018/05/23 18:01:22 by fmadura          ###   ########.fr        #
+#    Updated: 2018/06/20 17:03:00 by pde-rent         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME_1    	= push_swap
-NAME_2    	= checker
+NAME    	= lem-in
 SRC_PATH	= srcs/
 OBJ_PATH	= objs/
-FLAGS		= -Wall -Werror -Wextra -g -fsanitize=address
+FLAGS		= -Wall -Werror -Wextra #-g -fsanitize=address
 CC			= gcc $(FLAGS)
-NAME_P		= $(shell echo $(NAME_1) | tr ' ' '\n' | sed "s/\.[acoh]$///g" | tr '\n' ' ' | sed "s/ $///g")
+NAME_P		= $(shell echo $(NAME) | tr ' ' '\n' | sed "s/\.[acoh]$///g" | tr '\n' ' ' | sed "s/ $///g")
 SRC_SUFFIX	= .c
-#SRC_PREFIX	= 
-COMMON =	move_utils \
+COMMON =	main \
+			io \
+			error \
+			ants \
+			links \
+			rooms \
+			path \
+			count \
 			env_utils \
-			parser_utils \
 			str_utils \
 			basics \
-			bubble_sort \
-			move \
 			parser \
-			piles_utils \
-			piles_utils2 \
-			piles_utils3 \
-			quick_utils \
-			quick_sort \
-			ladder_sort \
-			ladder_utils \
-			interpret \
-			optimizer
+			parser_utils \
+			move_colony \
+			print_anthill \
+			genetic
 
-COMMON_FILES =	$(addsuffix $(SRC_SUFFIX),$(COMMON))
-SRC1_FILES = $(COMMON_FILES)
-SRC1_FILES += main.c
-SRC2_FILES = $(COMMON_FILES)
-SRC2_FILES += checker.c
-
-#SRC_RAW2	= $(addprefix ${SRC_PREFIX},${COMMON})
-
-OBJ1_FILES	= $(SRC1_FILES:.c=.o)
-OBJ2_FILES	= $(SRC2_FILES:.c=.o)
-SRC1		= $(addprefix $(SRC_PATH),$(SRC1_FILES))
-SRC2		= $(addprefix $(SRC_PATH),$(SRC2_FILES))
-OBJ1		= $(addprefix $(OBJ_PATH),$(OBJ1_FILES))
-OBJ2		= $(addprefix $(OBJ_PATH),$(OBJ2_FILES))
+SRC_FILES = $(addsuffix $(SRC_SUFFIX),$(COMMON))
+OBJ_FILES = $(SRC_FILES:.c=.o)
+SRC		= $(addprefix $(SRC_PATH),$(SRC_FILES))
+OBJ		= $(addprefix $(OBJ_PATH),$(OBJ_FILES))
 
 #color
 YELLOW		= "\\033[33m"
@@ -68,55 +55,35 @@ EOLCLR		= "\\033[0K"
 CHECK		= "\\xE2\\x9C\\x94"
 OK			= " $(CYAN)$(CHECK)$(WHITE)"
 
-all : $(NAME_1) $(NAME_2)
+all : $(NAME)
 
-$(NAME_1) : $(OBJ1)
+$(NAME) : $(OBJ)
 	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>\t$(YELLOW)$(BOLD)"\
-	"push_swap compiled\t"$(OK)'\n'
-	@ $(CC) -I./includes $(OBJ1) -o $@
+	"lem_in compiled\t\t"$(OK)'\n'
+	@ $(CC) -I./includes $(OBJ) -o $@
 	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>\t$(GREEN)$(BOLD)"\
 	"build successful\t"$(OK)'\n'
 
-$(NAME_2) : $(OBJ2)
-	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>\t$(YELLOW)$(BOLD)"\
-	"checker compiled\t"$(OK)'\n'
-	@ $(CC) -I./includes $(OBJ2) -o $@
-	@printf "\r$(EOLCLR)[$(NAME_P)] >>>>>>>>>>>>>>\t$(GREEN)$(BOLD)"\
-	"build successful\t"$(OK)'\n'
-
-$(OBJ1) : | $(OBJ_PATH)
-$(OBJ2) : | $(OBJ_PATH)
+$(OBJ) : | $(OBJ_PATH)
 
 $(OBJ_PATH) : 
 	@mkdir -p $(OBJ_PATH)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@printf "\r$(EOLCLR)[$(NAME_P)] compiling\t\t$(BOLD)$(YELLOW)$<$(WHITE)"
+	@printf "\r$(EOLCLR)[$(NAME_P)] compiling\t$(BOLD)$(YELLOW)$<$(WHITE)"
 	@$(CC) -I./includes -o $@ -c $<
 	@printf '\t'$(OK)
 
 clean :
-	@printf "[$(NAME_P)] removing\t\t$(PINK)all obj file$(WHITE)"
+	@printf "[$(NAME_P)] removing\t$(PINK)all obj file$(WHITE)"
 	@rm -rf $(OBJ_PATH)
 	@printf '\t\t'$(OK)'\n'
 
 fclean : clean
-	@printf "[$(NAME_P)] erasing\t\t$(PINK)$(NAME_1)$(WHITE)"
-	@rm -f $(NAME_1)
-	@rm -f $(NAME_2)
-	@printf '\t\t'$(OK)'\n'
-	@printf "[$(NAME_P)] erasing\t\t$(PINK)visualizer binaries$(WHITE)"
-	@rm -f _visualizer/c/list_jsonifier.exe
-	@rm -f _visualizer/c/rnd_int.exe
-	@printf '\t'$(OK)'\n'
-	@printf "[$(NAME_P)] erasing\t\t$(PINK)visualizer cache$(WHITE)"
-	@rm -f _visualizer/html/tmp.html
-	@rm -f _visualizer/html/index.html
-	@rm -f _visualizer/commands.json
-	@rm -f _visualizer/commands.txt
-	@rm -f _visualizer/unsorted_list.json
-	@rm -f _visualizer/unsorted_list.txt
-	@printf '\t'$(OK)'\n'
+	@printf "[$(NAME_P)] erasing\t$(PINK)$(NAME)$(WHITE)"
+	@rm -f $(NAME)
+	@rm -rf lem-in.dSYM
+	@printf '\t\t\t'$(OK)'\n'
 
 re : fclean all
 
