@@ -118,7 +118,7 @@ void			del_ant(t_env *env, t_ant *ant);
 ** PATHS
 */
 
-t_path			*new_path(t_env *env);
+t_path			*new_path(t_env *env, int *path, int size);
 t_path			*duplicate_path(t_env *env, t_path *path);
 t_path			*add_path(t_env *env, t_path *path, t_room *room);
 int				in_path(t_path *path, t_room *r);

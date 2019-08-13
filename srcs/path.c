@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-t_path	*new_path(t_env *env, int *path)
+t_path	*new_path(t_env *env, int *path, int size)
 {
 	t_path *p;
 	(p = (t_path *)malloc(sizeof(t_path)))
