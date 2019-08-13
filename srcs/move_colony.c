@@ -20,6 +20,7 @@ static void		assign_colony(t_env *env)
 	(env->colony = (t_ant **)malloc(sizeof(t_ant *) * env->nb_ants))
 	? 0 : put_error(env, "Error: t_ant ** malloc failed");
 	while (++i < env->nb_ants)
+		// change l'itinéraire env->fw en fonction de l'algo (combo paths)
 		env->colony[i] = new_ant(env, env->fw);
 	IS_SET_A ? put_ants(env) : 0;
 }

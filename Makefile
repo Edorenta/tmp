@@ -20,6 +20,7 @@ SRC_SUFFIX	= .c
 COMMON =	main \
 			io \
 			error \
+			memory \
 			ants \
 			links \
 			rooms \

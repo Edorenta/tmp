@@ -65,6 +65,8 @@ int				pstr(int fd, const char *s, char end);
 int				scat(char *dest, const char *src, char c);
 long			fatol(t_env *env, const char *str);
 int				scmp(const char *s1, const char *s2);
+void			*memcp(void *mem2, const void *mem1, int n);
+void			*mems(void *mem, int c, size_t n);
 void			init_env(t_env *env);
 void			deinit_env(t_env *env);
 
@@ -109,7 +111,7 @@ t_room			*str_to_room(t_env *env, const char *s);
 
 void			ant_add_path(t_env *env, t_ant *ant, t_room *room);
 int				move_ant_forward(t_env *env, t_ant *ant);
-t_ant			*new_ant(t_env *env, t_path *path);
+t_ant			*new_ant(t_env *env, int *path, int size)
 void			del_ant(t_env *env, t_ant *ant);
 
 /*

@@ -12,16 +12,15 @@
 
 #include "lem_in.h"
 
-t_path	*new_path(t_env *env)
+t_path	*new_path(t_env *env, int *path)
 {
 	t_path *p;
-
 	(p = (t_path *)malloc(sizeof(t_path)))
 	? 0 : put_error(env, "t_path malloc failed");
-	p->prev = NULL;
-	p->next = NULL;
-	p->room = env->start;
-	return (p);
+	p->rooms = path ? memcp(path, sizeof(int) * size) : NULL;
+	p->current = 0;
+	p->size = size;
+	return p;
 }
 
 t_path	*duplicate_path(t_env *env, t_path *path)

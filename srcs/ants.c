@@ -14,16 +14,14 @@
 
 static int	g_ant_id = 0;
 
-t_ant	*new_ant(t_env *env, t_path *path)
+t_ant	*new_ant(t_env *env, int *path, int size)
 {
 	t_ant		*a;
 
 	(a = (t_ant *)malloc(sizeof(t_ant)))
 	? 0 : put_error(env, "t_ant malloc failed");
+	a->path = new_path(env, path, size);
 	a->n = ++g_ant_id;
-	a->path = path ? duplicate_path(env, path) : NULL;
-	while (a->path && a->path->prev && a->path->prev->room)
-		a->path = a->path->prev;
 	return (a);
 }
 
