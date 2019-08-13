@@ -19,7 +19,7 @@ static void		free_colony(t_env *env)
 	i = env->nb_ants;
 	if (env->colony)
 		while (--i >= 0)
-			env->colony[i] ? del_ant(env->colony[i]) : 0;
+			env->colony[i] ? del_ant(env, env->colony[i]) : 0;
 	env->colony ? free(env->colony) : 0;
 }
 
@@ -60,6 +60,7 @@ void			init_env(t_env *env)
 	env->start = NULL;
 	env->end = NULL;
 	env->nb_rooms = 0;
+	env->room_free = NULL;
 	env->nb_paths = 0;
 	env->nb_valid = 0;
 	env->nb_ants = 0;
@@ -82,5 +83,5 @@ void			deinit_env(t_env *env)
 	free_rooms(env);
 	free_parsed_links(env);
 	free_lines(env);
-	del_path(env->fw);
+	del_ant_path(env->fw);
 }

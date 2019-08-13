@@ -41,43 +41,18 @@ t_path	*duplicate_path(t_env *env, t_path *path)
 	return (new);
 }
 
-t_path	*add_path(t_env *env, t_path *path, t_room *room)
+void	del_ant_path(t_path *path)
 {
-	t_path *p;
-
-	(path && path->room && room)
-	? 0 : put_error(env, "Error: faulty add_path element");
-	(p = (t_path *)malloc(sizeof(t_path)))
-	? 0 : put_error(env, "t_path malloc failed");
-	while (path && path->next && path->next->room)
-		path = path->next;
-	path->next = p;
-	p->prev = path;
-	p->next = NULL;
-	p->room = room;
-	return (path->next);
+	if (path && path->rooms)
+		free(path->rooms);
+	// if (path)
+	// 	free (path);
 }
 
-void	del_path(t_path *path)
+void	put_ant_path(t_path *path)
 {
-	t_path *p;
-
-	p = path;
-	while (p && p->prev)
-		(p = p->prev);
-	while (p && p->next)
-	{
-		p = p->next;
-		p->prev ? free(p->prev) : 0;
-	}
-	p ? free(p) : 0;
-}
-
-void	put_path(t_path *path)
-{
-	t_path *p;
-
-	p = path;
+	if (!path || !path->rooms)
+		return ;
 	while (p && p->prev)
 		p = p->prev;
 	while (p && p->room && &(p->room->id[0]))

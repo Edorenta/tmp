@@ -29,7 +29,7 @@ static void	set_parsed(t_env *env, t_parsed_room *parsed)
 	}
 }
 
-void		new_room(t_env *env, char *name, long x, long y)
+void		new_room(t_env *env, char *name, long x, long y, int state)
 {
 	t_room			*room;
 	t_parsed_room	*parsed_room;
@@ -46,8 +46,7 @@ void		new_room(t_env *env, char *name, long x, long y)
 	: (room->y = (int)y);
 	room->ant = NULL;
 	room->link = NULL;
-	room->idx = scmp(room->id, "start")
-	? (scmp(room->id, "end") ? ++env->lpri : 1) : 0;
+	room->idx = (state == 2 ? 0 : state == 3 ? 1 : ++env->lpri);
 	parsed_room->room = room;
 	parsed_room->next = NULL;
 	set_parsed(env, parsed_room);

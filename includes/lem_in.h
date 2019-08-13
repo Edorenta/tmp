@@ -100,7 +100,7 @@ void			free_room_links(t_env *env, t_room *room);
 ** ROOMS
 */
 
-void			new_room(t_env *env, char *name, long x, long y);
+void			new_room(t_env *env, char *name, long x, long y, int state);
 t_room			*str_to_room(t_env *env, const char *s);
 
 /*
@@ -110,7 +110,7 @@ t_room			*str_to_room(t_env *env, const char *s);
 void			ant_add_path(t_env *env, t_ant *ant, t_room *room);
 int				move_ant_forward(t_env *env, t_ant *ant);
 t_ant			*new_ant(t_env *env, t_path *path);
-void			del_ant(t_ant *ant);
+void			del_ant(t_env *env, t_ant *ant);
 
 /*
 ** PATHS
@@ -121,7 +121,7 @@ t_path			*duplicate_path(t_env *env, t_path *path);
 t_path			*add_path(t_env *env, t_path *path, t_room *room);
 int				in_path(t_path *path, t_room *r);
 int				path_len(t_path *path);
-void			del_path(t_path *path);
+void			del_ant_path(t_path *path);
 void			put_path(t_path *path);
 
 /*

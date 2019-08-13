@@ -47,20 +47,11 @@ void	put_ants(t_env *env)
 	}
 }
 
-void	del_ant(t_ant *ant)
+void	del_ant(t_env *env, t_ant *ant)
 {
-	(ant && ant->path && ant->path->room && ant->path->room->ant)
-	? (ant->path->room->ant = NULL) : 0;
-	del_path(ant->path);
+	(ant && ant->path && ant->path->rooms)
+	? (env->room_free[ant->path->rooms[ant->path->current]] = 1) : 0;
+	del_ant_path(ant->path);
 	ant ? free(ant) : 0;
 	--g_ant_id;
-}
-
-void	ant_add_path(t_env *env, t_ant *ant, t_room *room)
-{
-	(ant && ant->path && ant->path->room && ant->path->room->ant)
-	? (ant->path->room->ant = NULL) : put_error(env, "Error: faulty ant->path");
-	(room) ? add_path(env, ant->path, room)
-	: put_error(env, "Error: missing room to move ant to");
-	(ant->path->room->ant) = ant;
 }

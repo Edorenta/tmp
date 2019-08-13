@@ -41,6 +41,7 @@ struct			s_env
 	int 			nb_valid;
 	int				**links;
 	int 			**paths;
+	char 			*room_free;
 	t_ant			**colony;
 };
 
@@ -86,14 +87,14 @@ struct			s_parsed_link
 struct			s_ant
 {
 	int				n;
-	t_path			*path;
+	int				*path;
 };
 
 struct			s_path
 {
-	t_path			*prev;
-	t_room			*room;
-	t_path			*next;
+	int				*rooms;
+	int				size;
+	int				current;
 };
 
 #endif
